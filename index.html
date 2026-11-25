@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lodestar</title>
+<meta name="description" content="Your market clock, position calculator, trading-session hours and the week's key events, in one calm dashboard.">
+<meta name="theme-color" content="#0B1220">
+<link rel="canonical" href="https://www.lodestar.krd/">
+<meta property="og:url" content="https://www.lodestar.krd/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lodestar">
+<meta property="og:description" content="Your market clock, position calculator, trading-session hours and the week's key events, in one calm dashboard.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230B1220' stroke='%23D4AF6A' stroke-width='3'/%3E%3Cpath d='M6 50L22 32L30 40L42 24L58 50Z' fill='%231B2740' stroke='%23D4AF6A' stroke-width='2.5' stroke-linejoin='round'/%3E%3Cpath d='M46 8l2.2 6.4 6.4 2.2-6.4 2.2L46 25l-2.2-6.2-6.4-2.2 6.4-2.2z' fill='%23A9B8FF'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600&text=%E5%88%A9&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 15px/1.5 Inter,system-ui,sans-serif}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit}
+.wrap{max-width:1360px;margin:0 auto;padding:28px 40px 56px;display:flex;flex-direction:column;gap:24px}
+.c{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:24px}
+.l{font:500 12px/1 Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+.m{font:400 13px/1.45 Inter,sans-serif;color:var(--mu)}
+.top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px}
+.top .st{justify-self:end}.top .brand{justify-self:start;min-width:0}
+.brand{display:flex;align-items:center;gap:12px}
+.mono{width:40px;height:40px;border-radius:10px;border:1px solid var(--ac);color:var(--ac);display:flex;align-items:center;justify-content:center;font:600 22px Cormorant Garamond,serif}
+.bn{font:600 22px Cormorant Garamond,serif;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
+.mono{flex:none}
+.logo{position:relative;flex:none;display:block;width:108px;height:108px;border-radius:50%;animation:lgp 4.2s ease-in-out infinite}
+.logo svg{display:block;width:100%;height:100%;overflow:visible;transition:transform .35s}
+.brand:hover .logo svg{transform:scale(1.07)}
+.brand:focus-visible{outline:2px solid var(--ac);outline-offset:6px;border-radius:14px}
+.logo .man,.logo .star,.logo .head,.logo .bu,.logo .rc,.logo .ex{transform-box:view-box}
+.logo .head{transform-origin:48px 40px;animation:lgidle 6s ease-in-out infinite}
+.brand:hover .logo .head{animation:lgscan 1.8s ease-in-out infinite}
+.logo .star{transform-origin:86px 27px;animation:lgtw 3.2s ease-in-out infinite}
+.logo .sl{animation:lgdash 2.4s linear infinite}
+.logo .rc{opacity:0}
+.logo .bu{transform-origin:79px 28px}
+.logo.go{animation:lgp2 3.4s ease-in-out both}
+.logo.go .man{animation:lgman 3.4s ease-in-out both}
+.logo.go .star{animation:lgstar 3.4s ease-in-out both}
+.logo.go .head{animation:none}
+.logo.go .rc{animation:lgrc 3.4s both}
+.logo.go .ex{animation:lgex 3.4s both}
+.logo.go .bu{animation:lgbu 3.4s ease-out both}
+@keyframes lgp{0%,100%{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 42%,transparent)) drop-shadow(0 0 11px color-mix(in srgb,var(--gl) 30%,transparent))}50%{filter:drop-shadow(0 0 7px color-mix(in srgb,var(--ac) 68%,transparent)) drop-shadow(0 0 19px color-mix(in srgb,var(--gl) 48%,transparent))}}
+@keyframes lgp2{0%,100%{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 42%,transparent)) drop-shadow(0 0 11px color-mix(in srgb,var(--gl) 30%,transparent))}42%,70%{filter:drop-shadow(0 0 12px color-mix(in srgb,var(--ac) 95%,transparent)) drop-shadow(0 0 34px color-mix(in srgb,var(--gl) 80%,transparent))}}
+@keyframes lgidle{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(3deg)}}
+@keyframes lgscan{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(8deg)}}
+@keyframes lgtw{0%,100%{opacity:.85;transform:scale(.94)}50%{opacity:1;transform:scale(1.1)}}
+@keyframes lgdash{to{stroke-dashoffset:-9.4}}
+@keyframes lgman{0%{transform:translate(0,0)}22%{transform:translate(12px,12px)}40%,70%{transform:translate(24px,4px)}84%{transform:translate(12px,12px)}100%{transform:translate(0,0)}}
+@keyframes lgstar{0%{transform:translate(0,0) scale(1)}40%,72%{transform:translate(-8px,1px) scale(1.5)}100%{transform:translate(0,0) scale(1)}}
+@keyframes lgrc{0%,38%{opacity:0}42%,70%{opacity:1}74%,100%{opacity:0}}
+@keyframes lgex{0%,38%{opacity:1}42%,70%{opacity:0}74%,100%{opacity:1}}
+@keyframes lgbu{0%,40%{opacity:0;transform:scale(1)}44%{opacity:.9}70%{opacity:0;transform:scale(7)}100%{opacity:0;transform:scale(7)}}
+.bn{font-size:30px;line-height:1.08;white-space:normal;max-width:210px;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;text-overflow:ellipsis}
+.tab.home{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ac);color:var(--ac);padding:11px 18px}
+.tab.home:hover{background:color-mix(in srgb,var(--ac) 16%,transparent);color:var(--ac)}
+.tab.home.on{background:var(--ac);color:var(--on)}
+@media(max-width:700px){.logo{width:78px;height:78px}.bn{font-size:22px;max-width:150px}}
+@media(prefers-reduced-motion:reduce){.logo,.logo .head,.logo .star,.logo .sl,.logo.go,.logo.go *{animation:none!important}}
+
+/* logo variants */
+.logo.big{width:132px;height:132px}
+.lcard:hover .logo:not(.go) .head{animation:lgscan 1.8s ease-in-out infinite}
+.logo.v-compass .cs-n,.logo.v-compass .cs-tip,.logo.v-compass .cs-fl{transform-box:view-box}
+.logo.v-compass .cs-n{transform-origin:60px 60px;animation:csidle 6s ease-in-out infinite}
+.logo.v-compass .cs-tip{transform-origin:60px 15px;animation:lgtw 3s ease-in-out infinite}
+.logo.v-compass .cs-fl{transform-origin:60px 60px;opacity:0}
+:is(.brand,.lcard):hover .logo.v-compass .cs-n{animation:csscan 1.5s ease-in-out infinite}
+.logo.v-compass.go .cs-n{animation:csspin 3.2s cubic-bezier(.25,.6,.25,1) both}
+.logo.v-compass.go .cs-tip{animation:cstip 3.2s both}
+.logo.v-compass.go .cs-fl{animation:csfl 3.2s ease-out both}
+@keyframes csidle{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes csscan{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+@keyframes csspin{0%{transform:rotate(0)}66%{transform:rotate(738deg)}82%{transform:rotate(713deg)}100%{transform:rotate(720deg)}}
+@keyframes cstip{0%,62%{transform:scale(1)}74%{transform:scale(2.8)}100%{transform:scale(1)}}
+@keyframes csfl{0%,64%{opacity:0;transform:scale(1)}68%{opacity:.95}100%{opacity:0;transform:scale(8.5)}}
+
+.logo.v-summit .su-st,.logo.v-summit .su-bu{transform-box:view-box}
+.logo.v-summit .su-st{transform-origin:74px 21px;animation:lgtw 3.2s ease-in-out infinite}
+.logo.v-summit .su-bm{animation:lgdash 2.2s linear infinite}
+.logo.v-summit .su-bu{transform-origin:74px 38px;opacity:0}
+:is(.brand,.lcard):hover .logo.v-summit .su-st{animation:lgtw 1.4s ease-in-out infinite}
+.logo.v-summit.go .su-st{animation:sust 3.3s ease-in-out both}
+.logo.v-summit.go .su-bm{animation:subm 3.3s both}
+.logo.v-summit.go .su-bu{animation:subu 3.3s ease-out both}
+@keyframes sust{0%{transform:translate(0,0) scale(1)}34%,70%{transform:translate(0,12px) scale(1.45)}100%{transform:translate(0,0) scale(1)}}
+@keyframes subm{0%{opacity:.8}18%{opacity:1}34%,72%{opacity:0}100%{opacity:.8}}
+@keyframes subu{0%,34%{opacity:0;transform:scale(1)}40%{opacity:.95}72%,100%{opacity:0;transform:scale(8)}}
+
+.logo.v-constellation .ct-s,.logo.v-constellation .ct-m,.logo.v-constellation .ct-hd,.logo.v-constellation .ct-bu,.logo.v-constellation .ct-rc{transform-box:view-box}
+.logo.v-constellation .ct-ln{stroke-dasharray:100;stroke-dashoffset:0}
+.logo.v-constellation .ct-s{transform-origin:var(--ox) var(--oy);animation:lgtw 3.1s ease-in-out infinite;animation-delay:calc(var(--i)*-.55s)}
+.logo.v-constellation .ct-hd{transform-origin:26px 70px;animation:ctscan 6s ease-in-out infinite}
+.logo.v-constellation .ct-bu{transform-origin:96px 28px;opacity:0}
+.logo.v-constellation .ct-rc{opacity:0}
+:is(.brand,.lcard):hover .logo.v-constellation .ct-s{animation-duration:1.5s}
+.logo.v-constellation.go .ct-ln{animation:ctdraw 2.2s linear .15s both}
+.logo.v-constellation.go .ct-s{animation:ctpop .9s ease-out both;animation-delay:var(--dl)}
+.logo.v-constellation.go .ct-bu{animation:ctbu 3.4s ease-out both}
+.logo.v-constellation.go .ct-rc{animation:ctrc 3.4s both}
+.logo.v-constellation.go .ct-ar{animation:ctar 3.4s both}
+.logo.v-constellation.go .ct-hd{animation:none}
+@keyframes ctscan{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(5deg)}}
+@keyframes ctdraw{0%{stroke-dashoffset:100}100%{stroke-dashoffset:0}}
+@keyframes ctpop{0%{opacity:0;transform:scale(.1)}45%{opacity:1;transform:scale(1.9)}100%{opacity:1;transform:scale(1)}}
+@keyframes ctbu{0%,64%{opacity:0;transform:scale(1)}68%{opacity:.95}96%,100%{opacity:0;transform:scale(7)}}
+@keyframes ctrc{0%,48%{opacity:0}54%,86%{opacity:1}92%,100%{opacity:0}}
+@keyframes ctar{0%,48%{opacity:1}54%,86%{opacity:0}92%,100%{opacity:1}}
+
+.logo.v-axis .ax-ln{stroke-dasharray:100;stroke-dashoffset:0}
+.logo.v-axis .ax-tr{stroke-dasharray:7 93;animation:axtr 2.6s linear infinite}
+.logo.v-axis .ax-st,.logo.v-axis .ax-bu{transform-box:view-box}
+.logo.v-axis .ax-st{transform-origin:92px 33px;animation:lgtw 3s ease-in-out infinite}
+.logo.v-axis .ax-bu{transform-origin:92px 33px;opacity:0}
+:is(.brand,.lcard):hover .logo.v-axis .ax-tr{animation-duration:1.1s}
+.logo.v-axis.go .ax-ln{animation:axdraw 2s ease-out both}
+.logo.v-axis.go .ax-tr{animation:none;opacity:0}
+.logo.v-axis.go .ax-st{animation:axst 3.2s ease-out both}
+.logo.v-axis.go .ax-bu{animation:axbu 3.2s ease-out both}
+@keyframes axtr{0%{stroke-dashoffset:7;opacity:.9}100%{stroke-dashoffset:-93;opacity:.9}}
+@keyframes axdraw{0%{stroke-dashoffset:100}100%{stroke-dashoffset:0}}
+@keyframes axst{0%,52%{opacity:.2;transform:scale(.4)}66%{opacity:1;transform:scale(2.1)}100%{opacity:1;transform:scale(1)}}
+@keyframes axbu{0%,58%{opacity:0;transform:scale(1)}64%{opacity:.95}96%,100%{opacity:0;transform:scale(8)}}
+
+.logo .cs-fl,.logo .su-bu,.logo .ct-bu,.logo .ax-bu{vector-effect:non-scaling-stroke}
+
+.logo .be-bu,.logo .cr-bu,.logo .cd-bu,.logo .te-bu,.logo .as-bu{vector-effect:non-scaling-stroke;opacity:0}
+.logo.v-beacon .be-l,.logo.v-beacon .be-r,.logo.v-beacon .be-st,.logo.v-beacon .be-bu{transform-box:view-box}
+.logo.v-beacon .be-l,.logo.v-beacon .be-r{transform-origin:60px 44px}
+.logo.v-beacon .be-l{animation:bel 5s ease-in-out infinite}
+.logo.v-beacon .be-r{animation:ber 5s ease-in-out infinite}
+.logo.v-beacon .be-lt{animation:lgtw 2.5s ease-in-out infinite}
+.logo.v-beacon .be-st{transform-origin:95px 33px;animation:lgtw 3.2s ease-in-out infinite}
+.logo.v-beacon .be-bu{transform-origin:60px 43px}
+:is(.brand,.lcard):hover .logo.v-beacon :is(.be-l,.be-r){animation-duration:2.2s}
+.logo.v-beacon.go .be-l{animation:begol 3.2s ease-in-out both}
+.logo.v-beacon.go .be-r{animation:begor 3.2s ease-in-out both}
+.logo.v-beacon.go .be-st{animation:bega 3.2s ease-out both}
+.logo.v-beacon.go .be-bu{animation:begb 3.2s ease-out both}
+@keyframes bel{0%,100%{opacity:1}50%{opacity:.08}}
+@keyframes ber{0%,100%{opacity:.08}50%{opacity:1}}
+@keyframes begol{0%{opacity:1}25%,75%{opacity:1;transform:scaleY(1.25)}100%{opacity:1}}
+@keyframes begor{0%{opacity:.08}25%,75%{opacity:1;transform:scaleY(1.25)}100%{opacity:.08}}
+@keyframes bega{0%,35%{transform:scale(1)}55%{transform:scale(2.4)}100%{transform:scale(1)}}
+@keyframes begb{0%,28%{opacity:0;transform:scale(1)}34%{opacity:.95}85%,100%{opacity:0;transform:scale(9)}}
+
+.logo.v-crystal .cr-sh,.logo.v-crystal .cr-st,.logo.v-crystal .cr-bu{transform-box:view-box}
+.logo.v-crystal .cr-sh{animation:crsh 6s ease-in-out infinite}
+.logo.v-crystal .cr-st{transform-origin:88px 36px;animation:lgtw 3s ease-in-out infinite}
+.logo.v-crystal .cr-bu{transform-origin:88px 36px}
+:is(.brand,.lcard):hover .logo.v-crystal .cr-sh{animation-duration:2.2s}
+.logo.v-crystal.go .cr-sh{animation:crsh2 1.5s ease-in-out 2 both}
+.logo.v-crystal.go .cr-st{animation:crst 3s ease-out both}
+.logo.v-crystal.go .cr-bu{animation:crbu 3s ease-out both}
+@keyframes crsh{0%{transform:translateX(0)}28%,100%{transform:translateX(190px)}}
+@keyframes crsh2{0%{transform:translateX(0)}100%{transform:translateX(190px)}}
+@keyframes crst{0%,40%{transform:scale(1)}58%{transform:scale(2.5)}100%{transform:scale(1)}}
+@keyframes crbu{0%,44%{opacity:0;transform:scale(1)}50%{opacity:.95}95%,100%{opacity:0;transform:scale(8)}}
+
+.logo.v-candles .cd-c,.logo.v-candles .cd-st,.logo.v-candles .cd-bu{transform-box:view-box}
+.logo.v-candles .cd-c{transform-origin:var(--ox) var(--oy);animation:cdb 4.5s ease-in-out infinite;animation-delay:calc(var(--i)*-.6s)}
+.logo.v-candles .cd-st{transform-origin:90px 19px;animation:lgtw 3s ease-in-out infinite}
+.logo.v-candles .cd-bu{transform-origin:90px 19px}
+:is(.brand,.lcard):hover .logo.v-candles .cd-c{animation-duration:1.8s}
+.logo.v-candles.go .cd-c{animation:cdg 1s cubic-bezier(.3,1.5,.5,1) both;animation-delay:calc(var(--i)*.4s)}
+.logo.v-candles.go .cd-st{animation:cdst 3.2s ease-out both}
+.logo.v-candles.go .cd-bu{animation:cdbu 3.2s ease-out both}
+@keyframes cdb{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.05)}}
+@keyframes cdg{0%{transform:scaleY(.04)}100%{transform:scaleY(1)}}
+@keyframes cdst{0%,50%{transform:scale(1)}66%{transform:scale(2.5)}100%{transform:scale(1)}}
+@keyframes cdbu{0%,56%{opacity:0;transform:scale(1)}62%{opacity:.95}96%,100%{opacity:0;transform:scale(8)}}
+
+.logo.v-telescope .te-t,.logo.v-telescope .te-st,.logo.v-telescope .te-bu{transform-box:view-box}
+.logo.v-telescope .te-t{transform-origin:50px 71px;animation:teidle 6s ease-in-out infinite}
+.logo.v-telescope .te-st{transform-origin:96px 24px;animation:lgtw 3.1s ease-in-out infinite}
+.logo.v-telescope .te-bu{transform-origin:96px 24px}
+:is(.brand,.lcard):hover .logo.v-telescope .te-t{animation:tescan 1.8s ease-in-out infinite}
+.logo.v-telescope.go .te-t{animation:tego 3.3s ease-in-out both}
+.logo.v-telescope.go .te-st{animation:test 3.3s ease-out both}
+.logo.v-telescope.go .te-bm{animation:tebm 3.3s both}
+.logo.v-telescope.go .te-bu{animation:tebu 3.3s ease-out both}
+@keyframes teidle{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+@keyframes tescan{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+@keyframes tego{0%{transform:rotate(0)}20%{transform:rotate(14deg)}42%{transform:rotate(-9deg)}56%,78%{transform:rotate(-2deg)}100%{transform:rotate(0)}}
+@keyframes test{0%,48%{transform:scale(1)}64%{transform:scale(2.4)}100%{transform:scale(1)}}
+@keyframes tebm{0%,50%{opacity:0}56%,80%{opacity:.9}90%,100%{opacity:0}}
+@keyframes tebu{0%,56%{opacity:0;transform:scale(1)}61%{opacity:.95}96%,100%{opacity:0;transform:scale(8)}}
+
+.logo.v-ascent .as-c,.logo.v-ascent .as-st,.logo.v-ascent .as-bu{transform-box:view-box}
+.logo.v-ascent .as-c{animation:asw 2.4s ease-in-out infinite;animation-delay:calc(var(--i)*.28s)}
+.logo.v-ascent .as-st{transform-origin:60px 25px;animation:lgtw 3s ease-in-out infinite}
+.logo.v-ascent .as-bu{transform-origin:60px 25px}
+:is(.brand,.lcard):hover .logo.v-ascent .as-c{animation-duration:1.1s}
+.logo.v-ascent.go .as-c{animation:asgo 1.5s ease-in both;animation-delay:calc(var(--i)*.22s)}
+.logo.v-ascent.go .as-st{animation:asst 3s ease-out both}
+.logo.v-ascent.go .as-bu{animation:asbu 3s ease-out both}
+@keyframes asw{0%,45%,100%{opacity:var(--o)}22%{opacity:1}}
+@keyframes asgo{0%{transform:translateY(0);opacity:var(--o)}35%{transform:translateY(-9px);opacity:1}60%{transform:translateY(-22px);opacity:0}61%{transform:translateY(12px);opacity:0}100%{transform:translateY(0);opacity:var(--o)}}
+@keyframes asst{0%,40%{transform:scale(1)}58%{transform:scale(2.5)}100%{transform:scale(1)}}
+@keyframes asbu{0%,44%{opacity:0;transform:scale(1)}50%{opacity:.95}95%,100%{opacity:0;transform:scale(8)}}
+.lgh{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;padding:26px 32px}
+.lgg{display:grid;grid-template-columns:repeat(auto-fit,minmax(214px,1fr));gap:16px}
+.lcard{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;border:1px solid var(--bd);border-radius:16px;padding:22px 18px 20px;background:linear-gradient(180deg,var(--nt),transparent)}
+.lcard.use{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+.lcard h3{font:600 26px/1.1 Cormorant Garamond,serif;color:var(--ts);margin:0}
+.lcard .m{max-width:260px;min-height:82px}
+.lbig{background:none;border:0;padding:8px;cursor:pointer;border-radius:50%;display:block}
+.lbig:focus-visible{outline:2px solid var(--ac);outline-offset:4px}
+.tab.lg{border:1px dashed var(--ib);color:var(--t2)}
+.tab.lg.on{border-style:solid;border-color:var(--ac);color:var(--ac)}
+@media(max-width:700px){.logo.big{width:112px;height:112px}.lgh{padding:22px 20px}}
+@media(prefers-reduced-motion:reduce){.logo *{animation:none!important}}
+.nav{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+@media(max-width:520px){.top .st{font-size:0;gap:8px}.bn{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+@media(max-width:900px){.top{grid-template-columns:1fr auto}.nav{grid-column:1/-1;order:3}.bn{max-width:200px}}
+.gear{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--ib);background:transparent;color:var(--t2);cursor:pointer;margin-left:6px;padding:0}
+.gear:hover{color:var(--ac);border-color:var(--ac)}.gear svg{transition:transform .5s}.gear:hover svg{transform:rotate(90deg)}
+@media(prefers-reduced-motion:reduce){.gear svg{transition:none}}
+.tab{padding:12px 18px;border-radius:999px;color:var(--mu);font:500 14px/1 Inter,sans-serif}
+.tab:hover{color:var(--tx)}
+.tab.on{background:var(--rs);color:var(--ac)}
+.st{display:flex;align-items:center;gap:10px;color:var(--mu);font-size:13px}
+.st i{width:8px;height:8px;border-radius:50%;background:var(--up)}
+.chip{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--ib);background:transparent;color:var(--tx);font:500 14px Inter,sans-serif;cursor:pointer}
+.chip i{font:600 12px Inter,sans-serif;color:var(--mu);font-style:normal}
+.chip.sel{border-color:var(--ac);background:var(--rs);color:var(--ac)}
+.chip.sel i{color:var(--ac)}
+.chip.long{color:var(--up)}.chip.short{color:var(--dn)}.chip.long.sel{border-color:var(--up);background:color-mix(in srgb,var(--up) 14%,transparent);box-shadow:0 0 0 1px var(--up),0 0 20px 3px color-mix(in srgb,var(--up) 55%,transparent)}.chip.short.sel{border-color:var(--dn);background:color-mix(in srgb,var(--dn) 14%,transparent);box-shadow:0 0 0 1px var(--dn),0 0 20px 3px color-mix(in srgb,var(--dn) 55%,transparent)}
+.chip.go{background:var(--ac);border-color:var(--ac);color:var(--on)}
+.row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-top:1px solid var(--bd);font:400 15px/1.4 Inter,sans-serif;color:var(--t2)}
+.row b{font:600 15px Inter,sans-serif;color:var(--ts)}
+.pos{color:var(--up)}.neg{color:var(--dn)}
+h1,h2{font-family:Cormorant Garamond,serif;color:var(--ts);margin:0}
+.hero{text-align:center;display:flex;flex-direction:column;align-items:center;padding:48px 40px 56px}
+.clock{font:500 56px/1 Cormorant Garamond,serif;letter-spacing:.08em;color:var(--ac);font-variant-numeric:tabular-nums;margin-top:8px}
+.hero svg{display:block;margin:14px auto 0}
+.mn{position:relative;width:420px;max-width:100%;aspect-ratio:420/250;margin:14px auto 0;}
+.mn::before{content:"";position:absolute;left:50%;top:45%;width:86%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;background:radial-gradient(circle closest-side,rgba(176,152,255,.5) 0,rgba(176,152,255,.5) 48%,rgba(176,152,255,.3) 58%,rgba(176,152,255,.13) 72%,rgba(176,152,255,.04) 88%,rgba(176,152,255,0) 100%);animation:mnb 3.6s ease-in-out infinite}
+.mn svg{position:absolute;left:0;top:0;width:100%;height:100%;margin:0}
+.mn canvas{position:absolute;left:26.43%;top:7.6%;width:47.14%;aspect-ratio:1;display:block}
+.mnh{animation:mnb 3.6s ease-in-out infinite}@keyframes mnb{0%,100%{opacity:.78}50%{opacity:1}}
+.mnr{transform-box:fill-box;transform-origin:center;animation:mnrot 160s linear infinite}@keyframes mnrot{to{transform:rotate(360deg)}}
+.tw{animation:mtw 4s ease-in-out infinite}@keyframes mtw{0%,100%{opacity:.2}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.mnh,.tw,.mnr,.mn canvas,.mn::before{animation:none}}
+.hero h1{font-weight:500;font-size:clamp(52px,8.4vw,124px);line-height:1;margin-top:8px}
+.hero p{max-width:880px}
+.note{border:1px solid var(--ac);background:var(--nt);border-radius:14px;padding:18px 20px}
+.note .l{color:var(--ac);display:block;margin-bottom:10px}
+.pill{display:inline-block;padding:7px 12px;border-radius:999px;font:500 12px Inter,sans-serif;background:var(--rs);color:var(--t2)}
+.pill.cx{background:var(--pd);color:var(--dn)}.pill.ec{background:var(--pe);color:var(--ac)}
+.tg{display:inline-block;padding:4px 9px;border-radius:999px;background:var(--rs);font:600 11px Inter,sans-serif;letter-spacing:.07em;text-transform:uppercase}
+:root{--c-earnings:#E5B654;--c-speech:#A98BFF;--c-data:#4DA8F0;--c-market:#26C9A0;--c-spec:#FF9442;--c-geo:#FF5A78;--c-other:#8E9BB3}
+.t-earnings,.k-earnings,.cc-earnings{--c:var(--c-earnings)}.t-speech,.k-speech,.cc-speech{--c:var(--c-speech)}.t-data,.k-data,.cc-data{--c:var(--c-data)}.t-market,.k-market,.cc-market{--c:var(--c-market)}.t-spec,.k-spec,.cc-spec{--c:var(--c-spec)}.t-geo,.k-geo,.cc-geo{--c:var(--c-geo)}.t-other,.k-other,.cc-other{--c:var(--c-other)}
+.tg{color:color-mix(in srgb,var(--c,var(--ac)) 72%,var(--ts));background:color-mix(in srgb,var(--c,var(--ac)) 17%,transparent)}
+.chip.cc::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.chip.cc.sel{border-color:var(--c);background:color-mix(in srgb,var(--c) 16%,transparent);color:color-mix(in srgb,var(--c) 75%,var(--ts));box-shadow:0 0 14px color-mix(in srgb,var(--c) 30%,transparent)}.chip.cc.sel i{color:inherit}
+.ev[class*="k-"]{border-left:3px solid var(--c);padding-left:12px}
+.ev .tm{display:inline-flex;gap:5px;align-items:center}.ev .st{font-style:normal;color:var(--ac)}
+.wk{columns:3 300px;column-gap:28px}.wk .ev{break-inside:avoid}
+a.hl{display:block;color:inherit;text-decoration:none}a.hl:hover .ht{text-decoration:underline}
+.hm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:7px}.hm .ol{font:600 12px Inter,sans-serif;color:var(--t2)}
+.ks{padding:3px 8px;border-radius:6px;border:1px solid var(--ib);font:700 10px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)}
+.hm span{margin:0;display:inline-block}.hm .ks{color:var(--t2);font:700 10px Inter,sans-serif;letter-spacing:.08em}.hm .ks-tv{background:var(--ac);border-color:var(--ac);color:var(--on)}.hm .ks-social{border-color:var(--ac);color:var(--ac)}.hm .tg{color:color-mix(in srgb,var(--c,var(--ac)) 72%,var(--ts));font:600 11px Inter,sans-serif;letter-spacing:.07em}
+.ht{font:500 16px/1.4 Inter,sans-serif;color:var(--ts)}
+.srcs a{display:block;padding:7px 0;border-top:1px solid var(--bd);color:var(--t2);font:400 13px/1.4 Inter,sans-serif;text-decoration:none}.srcs a:hover{color:var(--ac)}
+.days{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;align-items:start}
+.dd{font:600 42px/1 Cormorant Garamond,serif;color:var(--ts);margin:10px 0 12px}.dd span{font-size:18px;color:var(--mu)}
+.ev{padding:13px 0;border-top:1px solid var(--bd)}
+.ev>div{display:flex;justify-content:space-between;align-items:center;gap:8px;font:400 12px Inter,sans-serif;color:var(--mu)}
+.ev b{display:block;margin-top:9px;font:500 15px/1.35 Inter,sans-serif;color:var(--ts)}
+.ev i{display:block;margin-top:3px;font:400 13px/1.4 Inter,sans-serif;color:var(--t2);font-style:normal}
+.ev.em{font:400 14px/1.5 Inter,sans-serif;color:var(--mu)}
+.nw{padding:13px 0;border-top:1px solid var(--bd);font:500 15px/1.4 Inter,sans-serif}
+.nw span{display:block;font:400 12px Inter,sans-serif;color:var(--mu);margin-top:4px}
+.flex{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.big{font:600 34px/1 Cormorant Garamond,serif;color:var(--ts);margin:14px 0 8px}
+.fld{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.fld label{display:block}
+.in{display:block;width:100%;min-height:48px;margin-top:10px;padding:0 14px;border-radius:10px;border:1px solid var(--ib);background:var(--bg);color:var(--ts);font:500 16px Inter,sans-serif}
+.in:focus{outline:2px solid var(--ac);outline-offset:1px}
+.in.bad{border-color:var(--dn)}
+.sr{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:12px 0;border-top:1px solid var(--bd);font:400 14px Inter,sans-serif;color:var(--t2);min-width:520px}
+.sr b{font:600 14px Inter,sans-serif}
+.sr.sh{border-top:0;padding-top:0;font:500 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}
+.glyph{position:relative;border-color:#F6D98B;color:#FFF3C9!important;text-shadow:0 0 8px #FFE9A8,0 0 18px #F2C45A,0 0 34px #9B7BFF;box-shadow:0 0 14px 2px rgba(246,217,139,.55),0 0 38px 8px rgba(155,123,255,.35),inset 0 0 16px rgba(246,217,139,.25);animation:maj 3.6s ease-in-out infinite}
+@keyframes maj{0%,100%{box-shadow:0 0 12px 2px rgba(246,217,139,.45),0 0 30px 6px rgba(155,123,255,.28),inset 0 0 12px rgba(246,217,139,.2);text-shadow:0 0 6px #FFE9A8,0 0 14px #F2C45A,0 0 26px #9B7BFF}50%{box-shadow:0 0 20px 4px rgba(255,232,160,.8),0 0 54px 14px rgba(155,123,255,.5),inset 0 0 22px rgba(246,217,139,.4);text-shadow:0 0 10px #FFF3C9,0 0 24px #F6D98B,0 0 44px #B49AFF}}
+@media(prefers-reduced-motion:reduce){.glyph{animation:none}}
+.glyph{width:76px;height:76px;border-radius:50%;border:1px solid var(--ac);display:flex;align-items:center;justify-content:center;font:600 30px 'Noto Serif SC','Songti SC','Cormorant Garamond',serif;color:var(--ac)}
+.cal{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:40px 32px}
+.cl{display:flex;align-items:center;gap:18px;padding:14px 0;border-top:1px solid var(--bd)}
+.dt{flex:none;width:58px;text-align:center;border-radius:10px;background:var(--rs);padding:8px 0}
+.dt i{display:block;font:500 11px Inter,sans-serif;letter-spacing:.08em;color:var(--mu);font-style:normal;text-transform:uppercase}
+.dt b{display:block;font:600 26px/1.1 Cormorant Garamond,serif;color:var(--ts)}
+.nm{flex:1;font:500 16px/1.3 Inter,sans-serif;color:var(--ts)}.nm span{display:block;font:400 13px Inter,sans-serif;color:var(--mu);margin-top:3px}
+.sg{border-radius:12px;display:flex;align-items:center;justify-content:center;height:56px;font:500 14px Inter,sans-serif;text-align:center}
+.tk{position:absolute;top:0;font:400 12px Inter,sans-serif;color:var(--mu)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:10px}
+table{width:100%;border-collapse:collapse;min-width:560px}
+th{text-align:left;padding:0 0 12px;font:500 12px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+td{padding:14px 0;border-top:1px solid var(--bd);font:400 14px Inter,sans-serif;color:var(--t2)}td b{color:var(--ts)}
+.center{text-align:center}
+@media(max-width:700px){.wrap{padding:20px 16px 40px}.hero{padding:36px 18px}.clock{font-size:44px}}
+.mhero{display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between;padding:32px}
+.cdw{flex:0 1 420px;display:flex;flex-direction:column;align-items:flex-end;text-align:right;min-width:300px}
+.cd{font:600 76px/1 Cormorant Garamond,serif;letter-spacing:.04em;color:var(--ac);font-variant-numeric:tabular-nums;margin-top:10px;text-shadow:0 0 28px color-mix(in srgb,var(--ac) 35%,transparent)}
+.cdu{display:flex;gap:0;width:100%;justify-content:flex-end;font:500 10px Inter,sans-serif;letter-spacing:.22em;color:var(--mu);margin-top:6px}
+.cdu span{width:1.6ch;min-width:76px;text-align:center}
+.bar{width:100%;height:4px;border-radius:2px;background:var(--bd);margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac);width:0}
+.nowm{position:absolute;top:-6px;bottom:-6px;width:3px;margin-left:-1px;border-radius:2px;background:var(--ts);box-shadow:0 0 0 2px var(--sf);display:none}
+.tk{font:400 12px/1.5 Inter,sans-serif;white-space:nowrap}.tk b{font-weight:600;color:var(--t2)}.tk.hl b{color:var(--ac)}.tk sup{font-size:9px;margin-left:2px;color:var(--ac)}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.wc{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 16px 22px;border:1px solid var(--bd);border-radius:16px;background:linear-gradient(180deg,var(--nt),transparent)}
+.wc.home{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac),0 10px 36px -14px color-mix(in srgb,var(--ac) 55%,transparent)}
+.wtop{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:26px}
+.wcn{font:600 26px/1 Cormorant Garamond,serif;color:var(--ts);margin-top:6px}
+.wct{font:600 30px/1 Cormorant Garamond,serif;letter-spacing:.05em;color:var(--ac);font-variant-numeric:tabular-nums}
+.wp{display:flex;align-items:center;gap:7px;font:500 13px Inter,sans-serif;color:var(--t2);flex-wrap:wrap;justify-content:center}
+.wp .pd{width:8px;height:8px;border-radius:50%;background:var(--o2);display:inline-block}
+.rt{text-align:right}.rt b{display:block;font:600 15px Inter,sans-serif;color:var(--ts)}.rt small{display:block;font:400 13px Inter,sans-serif;color:var(--mu);margin-top:3px}
+@media(max-width:700px){.cdw{align-items:flex-start;text-align:left;min-width:0}.cd{font-size:56px}.cdu{justify-content:flex-start}.cdu span{min-width:56px}.tk{font-size:11px}.tk.edge{display:none}}
+.kclock{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:4px}
+.kl{display:flex;align-items:center;gap:14px;font:500 12px/1 Inter,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--mu)}
+.kl i{display:block;width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--ac))}.kl i:last-child{background:linear-gradient(90deg,var(--ac),transparent)}
+.kt{display:flex;align-items:flex-start;gap:12px}
+.kd{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px}
+.kd b{position:relative;display:flex;align-items:center;justify-content:center;min-width:104px;padding:14px 10px;border-radius:18px;border:1px solid var(--bd);background:linear-gradient(180deg,var(--sf) 0%,var(--nt) 50%,var(--sf) 51%,var(--nt) 100%);font:600 68px/1 Cormorant Garamond,serif;color:var(--ts);font-variant-numeric:tabular-nums;letter-spacing:.02em;box-shadow:0 14px 30px -16px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.06)}
+.kd b::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--bd)}
+.kd span{font:500 10px Inter,sans-serif;letter-spacing:.24em;color:var(--mu);padding-left:.24em}
+.kd.sec b{color:var(--ac);border-color:var(--ac);text-shadow:0 0 22px color-mix(in srgb,var(--ac) 55%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--ac) 40%,transparent),0 14px 34px -14px color-mix(in srgb,var(--ac) 60%,transparent)}
+.kc{font:600 56px/1 Cormorant Garamond,serif;color:var(--ac);font-style:normal;margin-top:20px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:.25}}
+.kdate{font:500 17px Cormorant Garamond,serif;letter-spacing:.14em;text-transform:uppercase;color:var(--t2)}
+@media(prefers-reduced-motion:reduce){.kc{animation:none}}
+@media(max-width:700px){.kd b{min-width:74px;font-size:46px;padding:12px 6px}.kt{gap:6px}.kc{font-size:38px;margin-top:14px}.kl i{width:16px}}
+/* blend: clock and scene dissolve into the background */
+.kd b{min-width:0;padding:0 .08em;border:0;border-radius:0;background:none;box-shadow:none;font-weight:500;font-size:84px;color:var(--ts);letter-spacing:.03em}
+.kd b::after{display:none}
+.kd.sec b{border:0;box-shadow:none;color:var(--ac);text-shadow:0 0 30px color-mix(in srgb,var(--ac) 40%,transparent)}
+.kd span{opacity:.7}
+.kt{gap:6px}.kc{font-weight:500;font-size:64px;margin-top:12px;color:var(--mu);opacity:.8}
+.kl i{display:none}
+.hero>svg{-webkit-mask-image:radial-gradient(ellipse closest-side at 50% 52%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse closest-side at 50% 52%,#000 60%,transparent 100%);opacity:1;margin-top:0;margin-bottom:-6px}
+@media(max-width:700px){.kd b{font-size:54px}.kc{font-size:40px;margin-top:8px}}
+/* glowing time, colour follows the time of day */
+.kd b,.kd.sec b{color:var(--gl);font-size:96px;font-weight:500;text-shadow:0 0 10px color-mix(in srgb,var(--gl) 70%,transparent),0 0 34px color-mix(in srgb,var(--gl) 55%,transparent),0 0 70px color-mix(in srgb,var(--gl) 35%,transparent)}
+.kc{color:var(--gl);opacity:.85;font-size:72px;margin-top:14px;text-shadow:0 0 18px color-mix(in srgb,var(--gl) 60%,transparent)}
+.kd span{color:var(--gl);opacity:.75}
+@media(max-width:700px){.kd b,.kd.sec b{font-size:64px}.kc{font-size:46px;margin-top:10px}}
+.fm{display:flex;align-items:center;flex-wrap:wrap;gap:14px;font:500 24px/1.3 Cormorant Garamond,serif;color:var(--ts)}
+.fr{display:inline-flex;flex-direction:column;align-items:center;text-align:center}
+.fr>span:first-child{padding:0 8px 5px;border-bottom:1.5px solid var(--t2)}.fr>span:last-child{padding:5px 8px 0}
+.fm.res{font-size:22px}.fm.res b{font:600 32px Cormorant Garamond,serif;color:var(--ac)}
+.glow{color:var(--ts);text-shadow:0 0 14px color-mix(in srgb,var(--gl) 55%,transparent),0 0 38px color-mix(in srgb,var(--gl) 28%,transparent)}
+.sr6{grid-template-columns:repeat(6,minmax(0,1fr));min-width:720px}.sr6 small{font-weight:500}
+#ov{display:none}#ov.open{display:flex;position:fixed;inset:0;z-index:50;align-items:center;justify-content:center;padding:16px}
+.ovb{position:absolute;inset:0;background:rgba(5,8,16,.6)}.ovp{position:relative;width:100%;max-width:480px;max-height:90vh;overflow:auto;box-shadow:0 30px 80px -20px rgba(0,0,0,.6)}
+select.in{appearance:auto}
+.qd{margin:0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding:44px 20px;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.qd blockquote{margin:0;max-width:820px;font:500 clamp(26px,3.6vw,40px)/1.3 Cormorant Garamond,serif;color:var(--ts);text-wrap:balance;text-shadow:0 0 28px color-mix(in srgb,var(--gl) 22%,transparent)}
+.qd .qm{color:var(--gl);margin-right:2px;text-shadow:0 0 16px color-mix(in srgb,var(--gl) 60%,transparent)}
+.qd figcaption{font:400 14px Inter,sans-serif;color:var(--t2)}.qd figcaption b{font-weight:600;color:var(--ts)}.qd figcaption i{font-style:normal;color:var(--mu)}
+.qt{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;font:400 14px Inter,sans-serif;color:var(--mu);max-width:640px}
+.qd.cmp{padding:24px 20px;gap:10px}.qd.cmp blockquote{font-size:clamp(22px,2.6vw,28px)}
+[hidden]{display:none!important}
+.ft{margin:36px 0 0;padding:20px 0 28px;border-top:1px solid var(--bd);color:var(--mu);font:400 12.5px/1.6 Inter,system-ui,sans-serif;text-align:center}.ft b{color:var(--t2);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top">
+<a class="brand" id="brand" href="#home" aria-label="Boss's Dashboard, home" title="Home"><span class="logo" id="logo"><svg viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="lgc"><circle cx="60" cy="60" r="55"/></clipPath><linearGradient id="lgm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient><radialGradient id="lgs" cx=".5" cy=".4" r=".75"><stop offset="0" style="stop-color:var(--nt)"/><stop offset="1" style="stop-color:var(--bg)"/></radialGradient></defs><circle cx="60" cy="60" r="56" fill="url(#lgs)" style="stroke:var(--ac)" stroke-width="1.6"/><g clip-path="url(#lgc)"><g style="fill:var(--ts)" stroke="none"><circle cx="22" cy="32" r="1.3" opacity=".8"/><circle cx="34" cy="16" r="1" opacity=".6"/><circle cx="62" cy="13" r="1.1" opacity=".7"/><circle cx="100" cy="52" r="1.2" opacity=".7"/><circle cx="16" cy="58" r="1" opacity=".5"/><circle cx="102" cy="34" r=".9" opacity=".55"/></g><path d="M2 97L16 87L28 94L38 85L50 91L64 82L80 91L96 79L118 96V120H2Z" style="fill:var(--rs)" opacity=".5" stroke="none"/><path d="M2 106L28 84L48 62L60 74L72 66L90 84L118 106V120H2Z" fill="url(#lgm)" style="stroke:var(--ac)" stroke-width="1.8"/><path d="M42 70L48 62L54 69M44.5 73l3.5-3.5 3.5 3.5M69 70l3-4 3 4" style="stroke:var(--ac)" stroke-width="1.2" opacity=".7"/><path d="M54 74l2.6 2.8M58.5 79l2.8 3M79 74l2.4 2.8M84 79.5l2.4 2.6M33 82l-2.6 3.4" style="stroke:var(--ac)" stroke-width="1" opacity=".38"/><path d="M48 62L60 74L55 86L47 71Z" style="fill:var(--bg)" opacity=".4" stroke="none"/><path d="M72 66L90 84L82 90L74 76Z" style="fill:var(--bg)" opacity=".4" stroke="none"/><path d="M19 103l2.2-6 2.2 6zM24.5 106l2-5.2 2 5.2zM96 101l2.2-6 2.2 6zM101.5 104l2-5.2 2 5.2z" style="fill:var(--ac)" opacity=".5" stroke="none"/><path d="M43.4 67.2L45.2 65.4L48 62L51 65.6L52.8 67.2L51.4 66.6L50 68.2L48.4 66.6L46.8 68.4L45.4 66.6Z" style="fill:var(--o1)" opacity=".95" stroke="none"/><path d="M68.2 70.4L70 68.4L72 66L74.2 68.6L76 70.6L74.6 70L73.2 71.6L72 70L70.6 71.6L69.4 70Z" style="fill:var(--o1)" opacity=".9" stroke="none"/><path d="M25.6 86.4L28 84L30.4 86.8L28.8 86.2L28 87.6L27 86.2Z" style="fill:var(--o1)" opacity=".7" stroke="none"/><path d="M87.6 86.4L90 84L92.4 86.8L90.8 86.2L90 87.6L89 86.2Z" style="fill:var(--o1)" opacity=".7" stroke="none"/><path d="M45.6 71l1.3 3.6M50.6 70.4l-.9 3.8M52.4 72.6l.8 2.6M71 73.6l.9 3.2M74.8 74.2l-1 2.8" style="stroke:var(--ac)" stroke-width="1" opacity=".45"/></g><path class="sl" d="M65 25L74 26.5" style="stroke:var(--gl)" stroke-width="1.3" stroke-dasharray="1.5 3.2" opacity=".7"/><g class="star"><circle cx="86" cy="27" r="11" style="fill:var(--gl)" opacity=".18" stroke="none"/><path d="M86 14Q87.5 25.5 99 27Q87.5 28.5 86 40Q84.5 28.5 73 27Q84.5 25.5 86 14Z" style="fill:var(--gl)" stroke="none"/></g><circle class="bu" cx="79" cy="28" r="3" style="stroke:var(--gl)" stroke-width="1.4" opacity="0"/><g class="man" style="stroke:var(--ts)" stroke-width="2.4"><path d="M48 40V52M48 52L43.5 63M48 52L52.5 63"/><g class="head"><circle cx="48" cy="34.5" r="4.4"/><g class="ex"><path d="M48 43L54 41L56 35M48 44.5L52 39.5L55 36"/><path d="M54.5 34L61 28.5" style="stroke:var(--ac)" stroke-width="5.2"/><circle cx="62" cy="27.6" r="3" style="stroke:var(--ac)" stroke-width="1.3"/></g></g><path class="rc" d="M48 43L41.5 33M48 43L57 31"/></g></svg></span><div class="bn" id="bn">Boss's Dashboard</div></a>
+<nav class="nav" id="nav"></nav>
+<div class="st"><i></i>Assistant online<button class="gear" data-act="settings" aria-haspopup="dialog" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div>
+<div id="ov"></div>
+</div>
+<main id="page"></main>
+<footer class="ft"><b>Lodestar</b> is for information and education only and is not financial advice. Trading carries risk, including the loss of your capital. Market hours, calendar events and headlines are compiled from public sources and can be delayed, incomplete or wrong, so check anything important with the official source before you act.</footer>
+</div>
+
+<script>
+/* ---------- theme by Iraq / Kurdistan time (UTC+3) ---------- */
+const NAMES='bg sf bd rs nt ib tx ts t2 mu ac on up dn pd pe o1 o2 o3 lb'.split(' ');
+const PAL={
+morning:'#FBF5EA #FFFFFF #E7DCC8 #F3EAD8 #FFF9EE #D9CBB0 #2A2F3E #1A1F2E #4A5163 #5E6577 #8A5F0F #FFFFFF #12724F #C62828 #FBE9DC #F8EDD0 #FFF1C4 #F4B63F #C2791A #5C7FB8',
+day:'#EAF1FA #FFFFFF #D2DFEF #E1EBF8 #F2F7FD #BCCDE4 #1D2A44 #0F1B33 #44516B #56637C #1F5FA8 #FFFFFF #0F7A55 #C62828 #FBE9DC #E3EEFA #FFF6D6 #FFC93C #E08A12 #4C7DC4',
+evening:'#17122B #211A3A #382E5C #2C2450 #1C1633 #4A3F75 #EEE9F8 #F8F4FF #C3BADF #A99FCB #F2A65E #17122B #34D399 #FF5C5C #3B2438 #392B33 #FFD9B0 #F2A65E #B5513A #B6A8E8',
+night:'#0B1220 #121B2E #22304A #1B2740 #161F33 #33425F #E8ECF4 #F4F1EA #B4BFD2 #9AA7BD #D4AF6A #0B1220 #34D399 #FF5C5C #2A2230 #2A2619 #F4F1E6 #C9CFE3 #6C7596 #9DB4E0'};
+const ktime=()=>{const p=tzWall(S.prefs.tz,Date.now());return{h:+p.hour%24,m:+p.minute,s:+p.second}};
+const hh=h=>S.prefs.h24?pad(h):String(h%12||12);
+const kdate=()=>new Intl.DateTimeFormat('en-GB',{timeZone:S.prefs.tz,weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+const pad=n=>(n<10?'0':'')+n;
+function themeKey(){const f=new URLSearchParams(location.search).get('theme');if(PAL[f])return f;const h=ktime().h;return h>=5&&h<12?'morning':h>=12&&h<17?'day':h>=17&&h<21?'evening':'night'}
+const GLOW={morning:'#FFAE3D',day:'#3F9BFF',evening:'#FF8A6B',night:'#A9B8FF'};
+let curTheme='';
+function applyTheme(){const k=themeKey();if(k===curTheme)return false;curTheme=k;document.documentElement.style.setProperty('--gl',GLOW[k]);const v=PAL[k].split(' ');NAMES.forEach((n,i)=>document.documentElement.style.setProperty('--'+n,v[i]));return true}
+
+/* ---------- data ---------- */
+/* WEEK:BEGIN  Refreshed every Sunday (week ahead) and every day (headlines + intraday notes). Event row: [category, time ET, title, detail, importance 1-3]. */
+const WEEK={
+label:"Monday, Nov 23 – Friday, Nov 27, 2026",
+asOf:"Tue, Nov 24 · 3:30 AM ET (pre-market)",
+days:[
+{k:"mon",name:"Monday",num:"23",iso:"2026-11-23",pc:"p",pill:"Open 9:30 AM – 4:00 PM"},
+{k:"tue",name:"Tuesday",num:"24",iso:"2026-11-24",pc:"p",pill:"Open 9:30 AM – 4:00 PM"},
+{k:"wed",name:"Wednesday",num:"25",iso:"2026-11-25",pc:"p",pill:"Open 9:30 AM – 4:00 PM"},
+{k:"thu",name:"Thursday",num:"26",iso:"2026-11-26",pc:"cx",pill:"Closed · Thanksgiving"},
+{k:"fri",name:"Friday",num:"27",iso:"2026-11-27",pc:"ec",pill:"Early close 1:00 PM"}],
+ev:{
+mon:[
+["data","9:45 AM","S&P Global flash PMIs, November","Actual: Manufacturing 54.5 vs cons. 54.5 (prior 54.9) · Services 54.7 vs cons. 55.7 (prior 56.1) · Composite 54.6, a four-month low (prior 55.9). S&P Global’s Chris Williamson says price gauges point to inflation well above 2%",3],
+["data","Morning","Flash PMIs: UK, Germany, France, Eurozone","Europe’s November activity reads",1],
+["data","Morning","Chicago Fed National Activity Index, October","",1],
+["speech","4:00 PM","Fed’s John Williams (NY Fed)","Said inflation is “too high” with risks skewed to the upside; sees it ending 2026 at 3.5%, just above 2% in 2027 and at target in 2028. Said he “would not exclude” hikes at consecutive meetings; Reuters reads his comments as favoring a hike on Dec 8–9. Sees growth of 2.75% in 2026 and 2027 and unemployment of 4.1%. Fed funds range now 3.75%–4.00% (Reuters, Sahi)",3],
+["speech","Time TBC","ECB: Kocher, Simkus · BoE: Pill","Central-bank speakers listed for the day",1],
+["earnings","Reported","CrowdStrike","EPS $0.34 vs ~$0.31 expected; revenue $1.58B vs $1.53B",1],
+["earnings","4:30 PM","Agilent Technologies","Cons. EPS $1.72 (year ago $1.59) · results not confirmed in this refresh",1],
+["earnings","4:30 PM","Jacobs Solutions","Cons. EPS $2.11–2.12 · results not confirmed in this refresh",1],
+["earnings","Reported after close","Hewlett Packard Enterprise","Actual adj. EPS $1.43 vs cons. $1.26; revenue $14.55B (+50% y/y) vs cons. $14.47B. Q1 revenue guide $14.0–14.6B vs ~$13B expected; FY27 revenue growth guide 27%–35% (prior 13%–17%); Q1 adj. EPS guide $1.30–1.40. Shares fell about 6–7% after hours after a 17% jump in the regular session; some headlines call the Q1 outlook a marginal miss, so reports differ (SiliconANGLE, HeyGoTrade)",3],
+["earnings","Reported 4:15 PM","Zoom","Actual EPS $1.59 vs cons. $1.49; revenue $1.29B vs $1.28B. FY27 EPS guide $6.24–6.25 vs cons. $6.14. Initiates a $0.25 quarterly dividend (payable Dec 17). Shares about −1% after hours (single-source, unverified)",2],
+["earnings","5:00 PM","Symbotic","Cons. EPS $0.08 (year ago −$0.03) · results not confirmed in this refresh",1],
+["earnings","After close","Amentum · SMTC · CENT · Danaos","Amentum date still expected; Danaos call Tuesday 9:00 AM",1],
+["market","Afternoon","US 2-year note auction","$69bn",2],
+["market","4:00 PM","Wall Street’s best day since April 2025","Closes: S&P 500 7,237.17 (+4.73%, +326.78) · Nasdaq 24,089.56 (+6.51%) · Dow 49,595.31 (+3.01%, +1,447.98) · Russell 2000 2,669.66 (+3.40%). VIX 26.62 (about −26%). Nvidia closed $165.05, +31.48%, on 773–783M shares vs 169.5M average, after the board reinstated Jensen Huang; Micron +19%, AMD +6.9%. Nomura’s Charlie McElligott points to “mechanical” buying and short covering (Motley Fool, Fox Business, stl.news, HeyGoTrade)",3],
+["market","Morning","CrowdStrike to buy Zscaler for $43.9B","Zscaler about +13%, CrowdStrike about −9.6% in the morning (Yahoo Finance live feed, prior refresh)",2],
+["market","All day","Anthropic (ANT) sits out the rally","Slightly lower after its Nasdaq debut last week (raised about $81.3B at $83 a share) (Fox Business)",1],
+["spec","4:00 PM","Does Williams lean toward a December hike?","Answered: yes, per Reuters’ reading. CME FedWatch shows about a 96% chance of a 25bp hike on Dec 8–9 (Fox Business)",3],
+["other","Morning","Belgian airports shut by anti-austerity strike","Transport chaos across Belgium (Al Jazeera, Nov 23)",1]],
+tue:[
+["earnings","6:30 AM","Dollar Tree","Cons. EPS $0.91, revenue ~$5.04B (year ago EPS $1.21) · holiday consumer read",2],
+["earnings","6:45 AM","Medtronic","Cons. EPS $1.33, revenue ~$9.48B (year ago $1.36) · call 7:30 AM",2],
+["earnings","7:00 AM","Analog Devices","Cons. EPS $3.89 (year ago $2.26), revenue ~$4.32B · call 10:00 AM · book-to-bill and inventory comments are the read on analog and industrial demand",3],
+["earnings","7:00 AM","Best Buy","Cons. EPS $1.49, revenue ~$9.88B · holiday-spending read · stock closed $97.00 Monday, −0.97%",2],
+["earnings","7:00 AM","Dick’s Sporting Goods","Cons. EPS $1.41, revenue ~$5.08B (year ago $2.07)",1],
+["earnings","7:00 AM","J.M. Smucker","Cons. EPS $2.56, revenue ~$2.27B",1],
+["earnings","7:00 AM","Kohl’s","Cons. EPS about $0.00, revenue ~$3.39B",1],
+["earnings","7:30 AM","Abercrombie & Fitch","Cons. EPS $3.08, revenue ~$1.37B",1],
+["earnings","8:30 AM","Burlington Stores","Cons. EPS $1.67 (year ago $1.80) · time per prior refresh, not re-confirmed",1],
+["earnings","Before open","Dycom","Date still expected",1],
+["earnings","Before open","Vipshop · Bilibili · CMB.TECH · BW LPG · MMED","International and smaller reporters",1],
+["earnings","4:00 PM","Workday","Cons. non-GAAP EPS $2.74, revenue ~$2.69B · guidance in focus",2],
+["earnings","4:00 PM","Autodesk","Cons. non-GAAP EPS $3.07, revenue ~$2.13B",2],
+["earnings","4:05 PM","Dell Technologies","Cons. EPS $6.62, revenue ~$49.3B (company guide: ~$49B and ~$6.50) · options imply a move of about 17% either way · backlog and AI-infrastructure commentary matter more than headline EPS: the week’s pivotal report",3],
+["earnings","4:05 PM","Urban Outfitters","Cons. EPS $1.52, revenue ~$1.67B",1],
+["earnings","4:15 PM","HP Inc.","Cons. EPS $0.75 (year ago $0.93), revenue ~$15.4B",2],
+["earnings","4:30 PM","Nutanix","Cons. EPS $0.29 · time per prior refresh, not re-confirmed",1],
+["data","10:00 AM","Conference Board consumer confidence, November","Cons. 92.1 (prior 91.7)",3],
+["data","9:00 AM","S&P Cotality Case-Shiller home prices, September","Cons. +0.2% m/m (prior +0.3%)",1],
+["data","9:00 AM","FHFA house prices, September","",1],
+["data","10:00 AM","Richmond Fed manufacturing index","Cons. −3",1],
+["data","Morning","ADP weekly jobs · Chicago Fed labour indicators","On the day’s calendar (Newsquawk)",1],
+["data","Time TBC","Fed discount rate minutes","On the day’s calendar (Newsquawk)",1],
+["data","Morning","Germany Ifo business climate","Europe’s read on sentiment after the AI-led sell-off",2],
+["data","Morning","Philly Fed non-manufacturing","",1],
+["speech","Time TBC","ECB: Vujcic, Kocher · BoE: Greene · BoC: Macklem","Central-bank speakers listed for the day",1],
+["market","Afternoon","US auctions: 2-year FRN reopening and 5-year notes","$28bn and $70bn",2],
+["market","Pre-market","HPE falls about 6–7% after hours","Despite a record-revenue report; its first session since the results. Dow and S&P 500 futures about +0.2% near 10:15 PM ET Monday; Nasdaq 100 futures marginally higher (CNBC via HeyGoTrade)",2],
+["market","Overnight","Asia up, Europe flat","Nikkei +3.6%, ASX 200 +1.8%, Hang Seng −0.9% (gave up opening gains); Euro Stoxx 50 and DAX about −0.1%. LME copper −2.4% (Newsquawk, 06:15 GMT)",2],
+["market","All day","Nvidia’s second session since Huang’s return","Closed $165.05 Monday; $166.88 after hours. An independent committee’s probe into reports that Huang was targeted by a foreign intelligence effort continues (HeyGoTrade, Fox Business)",2],
+["geo","Overnight","IRGC: three tankers hit mines in Hormuz and burn","Qatar’s prime minister told Al Jazeera the region cannot withstand another US–Iran escalation; Qatar says it is working to revive talks. Al Jazeera’s live blog says Tehran demands seven conditions before any talks (Al Jazeera, Newsquawk)",3],
+["geo","Overnight","US adds Alibaba’s Singapore unit, Apex Enterprise Solutions and Megaspeed to its trade blacklist","Alibaba denies its unit diverted restricted chips (single-source, Newsquawk)",2],
+["spec","4:05 PM","Dell and the AI-capex question","A strong guide could extend the Nvidia-led rebound; a miss would revive the financing worries after last week’s rout",3]],
+wed:[
+["data","8:30 AM","PCE inflation, October","Headline cons. +0.3% m/m, ~3.8% y/y (prior +0.5%, 3.6%) · Cleveland Fed nowcast 3.8% y/y",3],
+["data","8:30 AM","GDP, Q3 second estimate","Cons. +3.5% (first estimate +3.4%) · consumption ~3.9% · core PCE 2.5%",3],
+["data","8:30 AM","Core PCE, October","Cons. +0.3% m/m, y/y est. 3.2–3.4% vs 3.1% prior · the week’s most important print",3],
+["data","8:30 AM","Personal income and spending, October","Income cons. +0.4% · spending +0.4% (prior +0.5%)",2],
+["data","8:30 AM","Initial jobless claims","Cons. ~200–201k (prior 203k) · continuing ~1.75M · moved up a day for the holiday",2],
+["data","8:30 AM","Durable goods orders, October (prelim)","Cons. +0.5% (prior +1.9%) · core capital goods +0.7%",2],
+["data","10:00 AM","New home sales, October","Cons. ~649k, about −3.8% m/m",1],
+["data","2:00 PM","Fed Beige Book","Watch for the effect of higher energy prices from the Middle East conflict, and the AI build-out",3],
+["data","Overnight","Australia October CPI · Japan services PPI · France consumer confidence","",1],
+["earnings","Before open","Deere","Cons. EPS $4.03–4.17, revenue ~$10.3–10.4B · call 10:00 AM · fiscal 2027 outlook may matter most",3],
+["earnings","7:00 AM","Li Auto","Cons. EPS −$0.08",1],
+["earnings","Before open","GDS Holdings · BZ · Banco Macro","Banco Macro time still to be announced",1],
+["market","Afternoon","US 7-year note auction","$44bn",2],
+["market","All day","Last full US session of the week","Thin pre-holiday liquidity can exaggerate moves",2],
+["spec","8:30 AM","Does a hot PCE harden the hike bet?","CME FedWatch shows about a 96% chance of a 25bp December hike after Williams’s remarks; a softer print could ease pressure on the 2-year",3]],
+thu:[
+["market","All day","US stock and bond markets closed","Thanksgiving Day",3],
+["data","Europe","Germany GfK consumer confidence (Dec) · France PPI · Eurozone M3 · Norway Q3 GDP","",1],
+["data","Time TBC","ECB account of the October meeting","",2],
+["speech","Time TBC","BoJ’s Tamura","",1],
+["other","All day","Thanksgiving in the United States","No US data or earnings; Asian and European markets still trade",1]],
+fri:[
+["market","1:00 PM","US equities close early","Day after Thanksgiving · liquidity is thin and moves can be sharp",3],
+["data","8:30 AM","Advance goods trade balance, October","Cons. about −$134–135bn (prior −$135.1bn)",2],
+["data","8:30 AM","Wholesale and retail inventories, October","Wholesale cons. +0.7%",1],
+["data","Overnight","China industrial profits · Tokyo CPI (Nov) · Eurozone economic confidence · France CPI · Germany unemployment","",1],
+["speech","Time TBC","ECB: Nagel, Vujcic, Moulin","Central-bank speakers listed for the day",1],
+["speech","Saturday","Fed pre-meeting blackout begins","No Fed policy talk until the Dec 8–9 meeting",2],
+["earnings","Time TBC","Meituan · Chagee","Chagee date still expected",1],
+["other","All day","Black Friday","Start of the US holiday shopping weekend",1]]},
+wk:[
+["spec","Fed","Dec 8–9 FOMC: a hike is priced","About 96% odds of a 25bp hike (CME FedWatch via Fox Business). Williams said he would not exclude hikes at consecutive meetings and sees inflation ending 2026 at 3.5% (Reuters). Fed funds range is 3.75%–4.00%",3],
+["spec","AI","Financing and returns on the AI build-out","Nasdaq fell ~10% last week and the S&P 500 closed Friday at 6,910.39, in correction. Monday’s rebound came on Nvidia’s news, not new financing clarity; Dell’s report tonight is the next test. The Nasdaq 100 is still roughly 18% below its 52-week high (Fox Business)",3],
+["spec","Tape","Best day since April 2025: relief rally or turn?","S&P 500 closed 7,237.17 (+4.73%), Nasdaq 24,089.56 (+6.51%), Dow 49,595.31 (+3.01%). Strategists call part of it mechanical buying, short covering and dealer hedge unwinds (Nomura via Yahoo Finance). Futures are about +0.2% pre-market",2],
+["spec","Volatility","VIX 26.62 at Monday’s close (Friday 35.89)","Down about 26% on the day (stl.news). Prior-refresh note: high-yield spreads widened from 323 to 352bp (single-source, unverified)",2],
+["spec","Nvidia","Huang’s return: investigation and Senate date","Board formed a National Security and Export Control Committee and is searching for a Chief Compliance Officer. Huang is scheduled to testify to the Senate Banking Committee on Dec 3 (single-source: Yahoo Finance via HeyGoTrade)",2],
+["geo","Iran","Hormuz tanker attacks, mines and the US blockade","IRGC says three tankers caught fire after hitting naval mines and blames US-backed transits; Iran says it will use “all available means” against the US blockade. Qatar is working with both sides to revive talks; Tehran lists seven conditions for any talks (Al Jazeera, Times of Israel)",3],
+["geo","Ukraine","Drone strikes on Russian ships off Libya","Zelenskyy says Ukraine was behind them. Separately, the FT reports the US is delaying about 60 Patriot interceptors bound for Ukraine (Al Jazeera, Newsquawk)",2],
+["geo","China","US trade blacklist widened","Alibaba’s Singapore unit, Apex Enterprise Solutions and Megaspeed added; Alibaba denies diversion of restricted chips (single-source, Newsquawk)",2],
+["market","Rates","10-year ~4.92–4.93% · 2-year not re-confirmed","10-year ~4.92% Monday afternoon and 4.93% at 06:15 GMT Tuesday (stl.news, Newsquawk). The 2-year was 4.70% in an earlier read",3],
+["market","FX","Dollar index 104.30 · USD/JPY 159.17","Unchanged overnight; EUR/USD 1.0908, GBP/USD 1.3040 (Newsquawk, 06:15 GMT)",2],
+["market","Oil","WTI ~$80.32 Monday close area","Crude fell Monday; WTI and Brent −0.6% and −0.7% overnight (stl.news, Newsquawk). Down ~22% since late October per the prior refresh despite the Hormuz attacks",3],
+["market","Metals","Spot gold −0.4% overnight · copper −2.4%","Gold level not re-confirmed; it traded near $3,657 intraday Monday in the prior refresh. LME copper −2.4% (Newsquawk)",2],
+["market","Crypto","Bitcoin −1.3% overnight","Briefly fell below $60,000 before recovering most of its losses (Newsquawk). It was near $61,400 intraday Monday in the prior refresh",2],
+["market","Asia","Nikkei +3.6% · ASX +1.8% · Hang Seng −0.9%","Europe’s Euro Stoxx 50 and DAX about −0.1% (Newsquawk, 06:15 GMT)",1],
+["market","Beyond","Dec 8–9 FOMC · Dec 18 options expiration","The next two dates this week’s data feeds into",2]],
+sources:[
+["Kiplinger · economic calendar","https://www.kiplinger.com/investing/economy/this-weeks-economic-calendar"],
+["StockTitan · earnings calendar","https://www.stocktitan.net/articles/earnings-calendar-week-of-november-23-2026"],
+["ZeroHedge · key events this week","https://zerohedge.com/markets/key-events-holiday-shortened-week-all-about-pce"],
+["FXEmpire · week ahead","https://www.fxempire.com/forecasts/article/the-week-ahead-pce-in-focus-after-ai-sell-off-in-holiday-shortened-week-1646337"],
+["HeyGoTrade · weekly outlook","https://www.heygotrade.com/en/news/weekly-economic-outlook-2026-11-23/"],
+["Investing.com · key earnings","https://www.investing.com/news/stock-market-news/key-earnings-reports-to-watch-this-holidayshortened-week-93CH-5046209"],
+["Newsquawk · European opening, Nov 24","https://www.newsquawk.com/headlines/newsquawk-daily-european-opening-news---24th-november-2026"],
+["Newsquawk · US earnings estimates, Nov 24","https://www.newsquawk.com/headlines/newsquawk-daily-us-earnings-estimates---24th-november-2026-mdt-adi-dell"],
+["HeyGoTrade · Dell and Best Buy preview","https://www.heygotrade.com/en/news/after-nvidia-rally-dell-and-best-buy-report/"],
+["HeyGoTrade · Nvidia, Nov 23","https://www.heygotrade.com/en/news/nvidia-nvda-stock-news-november-24-2026/"],
+["Motley Fool · market close, Nov 23","https://www.fool.com/coverage/stock-market-today/2026/11/23/stock-market-today-nov-23-nvidia-surges-31-adding-nearly-usd1-trillion-in-market-value-as-jensen-huang-reclaims-ceo-role/"],
+["Fox Business · stocks, Nov 23","https://www.foxbusiness.com/markets/stocks-november-23-2026"],
+["stl.news · market close, Nov 23","https://www.stl.news/us-stock-market-today-november-23-2026/"],
+["Reuters via Investing.com · Williams","https://www.investing.com/news/economy-news/fed-has-work-to-do-to-lower-inflation-williams-says-5046374"],
+["SiliconANGLE · HPE results","https://siliconangle.com/2026/11/23/hpes-stock-slides-despite-record-revenue-growth-and-upbeat-forecast/"],
+["Al Jazeera · Iran war live, Nov 24","https://www.aljazeera.com/news/liveblog/2026/11/24/iran-war-live-iran-says-three-ships-catch-fire-after-hitting-hormuz-mines"],
+["Al Jazeera · front page","https://www.aljazeera.com/"],
+["Yahoo Finance · live blog, Nov 23","https://finance.yahoo.com/markets/live/stock-market-today-monday-november-23-dow-sp-500-nasdaq-surge-after-nvidia-reinstates-jensen-huang-182039397.html"],
+["Investing.com · Zoom results","https://www.investing.com/news/stock-market-news/zoom-shares-fall-despite-earnings-beat-and-dividend-initiation-5046411"]]};
+const NEWS_ASOF="Tue, Nov 24 · 3:30 AM ET (pre-market)";
+const NEWS_NOTE="This refresh read Newsquawk, HeyGoTrade, Motley Fool, Fox Business, stl.news, SiliconANGLE, Reuters via Investing.com, Sahi and Al Jazeera. CNBC, Bloomberg, BBC, Sky and CoinDesk pages were unreachable, so no TV-channel pages were read. Spot gold and the 2-year yield were not re-confirmed.";
+/* Headline row: [category, outlet, kind (tv|wire|social|web), headline, when, link] */
+const NEWS=[
+["geo","Newsquawk","web","US adds Alibaba’s Singapore unit, Apex Enterprise Solutions and Megaspeed to its trade blacklist; Alibaba denies diverting restricted chips","Tue · 1:42 AM ET","https://www.newsquawk.com/headlines/newsquawk-daily-european-opening-news---24th-november-2026"],
+["geo","Newsquawk","web","IRGC says three tankers caught fire after hitting Hormuz mines; Qatar says it is working with Iran and the US to revive negotiations","Tue · 1:42 AM ET","https://www.newsquawk.com/headlines/newsquawk-daily-european-opening-news---24th-november-2026"],
+["geo","Newsquawk","web","US delaying Patriot interceptor shipments to Ukraine, with about 60 awaiting Pentagon approval, per the FT","Tue · 1:42 AM ET","https://www.newsquawk.com/headlines/newsquawk-daily-european-opening-news---24th-november-2026"],
+["market","Newsquawk","web","Asia-Pacific mostly higher on the tech lift, but the Hang Seng erases opening gains; Bitcoin briefly dips below $60,000","Tue · 1:42 AM ET","https://www.newsquawk.com/headlines/newsquawk-daily-european-opening-news---24th-november-2026"],
+["earnings","Newsquawk","web","Daily US earnings estimates, 24 November: Medtronic, Analog Devices, Dell","Tue · early","https://www.newsquawk.com/headlines/newsquawk-daily-us-earnings-estimates---24th-november-2026-mdt-adi-dell"],
+["earnings","HeyGoTrade","web","Gotrade Daily: After Nvidia rally, Dell and Best Buy report","Tue · 1:10 AM ET","https://www.heygotrade.com/en/news/after-nvidia-rally-dell-and-best-buy-report/"],
+["market","HeyGoTrade","web","Nvidia stock (NVDA) rises 31.5% after Huang returns as CEO","Tue · early","https://www.heygotrade.com/en/news/nvidia-nvda-stock-news-november-24-2026/"],
+["geo","Al Jazeera","tv","Iran war live: Tehran demands seven conditions be met before any talks with US","Tue · overnight","https://www.aljazeera.com/news/liveblog/2026/11/24/iran-war-live-iran-says-three-ships-catch-fire-after-hitting-hormuz-mines"],
+["geo","Times of Israel","web","IRGC says 3 oil tankers caught fire after hitting naval mines in Hormuz — Iranian report","Tue · overnight","https://www.timesofisrael.com/liveblog_entry/irgc-says-3-oil-tankers-caught-fire-after-hitting-naval-mines-in-hormuz-iranian-report"],
+["market","stl.news","web","Stock Market Today, Nov. 23, 2026: Powerful Wall Street rally","Mon · 6:44 PM ET","https://www.stl.news/us-stock-market-today-november-23-2026/"],
+["earnings","SiliconANGLE","web","HPE’s stock slides despite record revenue growth and upbeat forecast","Mon · 6:24 PM ET","https://siliconangle.com/2026/11/23/hpes-stock-slides-despite-record-revenue-growth-and-upbeat-forecast/"],
+["spec","Reuters · via Investing.com","wire","Fed has ‘work to do’ to lower inflation, Williams says","Mon · 4:05 PM ET","https://www.investing.com/news/economy-news/fed-has-work-to-do-to-lower-inflation-williams-says-5046374"],
+["spec","Sahi","web","Federal Reserve’s Williams sees US inflation ending 2026 at 3.5%","Mon · 4:29 PM ET","https://www.sahi.com/news/federal-reserve-s-williams-sees-us-inflation-ending-2026-at-3-5"],
+["market","Motley Fool","web","Stock Market Today, Nov. 23: Nvidia surges 31%, adding nearly $1 trillion in market value as Jensen Huang reclaims CEO role","Mon · 4:40 PM ET","https://www.fool.com/coverage/stock-market-today/2026/11/23/stock-market-today-nov-23-nvidia-surges-31-adding-nearly-usd1-trillion-in-market-value-as-jensen-huang-reclaims-ceo-role/"],
+["market","Fox Business","tv","Stocks soar on Jensen Huang’s return to Nvidia","Mon · 4:11 PM ET","https://www.foxbusiness.com/markets/stocks-november-23-2026"],
+["geo","Al Jazeera","tv","Iran says it will use ‘all available means’ to counter US blockade","Mon","https://www.aljazeera.com/news/2026/11/23/iran-says-it-will-use-all-available-means-to-counter-us-blockade"],
+["geo","Al Jazeera","tv","Zelenskyy says Ukraine behind drone attacks on Russian ships near Libya","Mon","https://www.aljazeera.com/news/2026/11/23/zelenskyy-says-ukraine-behind-drone-attacks-on-russian-ships-near-libya"],
+["geo","Al Jazeera","tv","At least 15 killed in Ukraine’s Kyiv region as Russia intensifies attacks","Mon","https://www.aljazeera.com/news/2026/11/23/death-toll-rises-after-deadly-russian-attacks-on-ukraine"],
+["other","Al Jazeera","tv","Anti-austerity strike spurs transport chaos across Belgium","Mon","https://www.aljazeera.com/news/2026/11/23/anti-austerity-strike-spurs-transport-chaos-across-belgium"],
+["other","Al Jazeera","tv","COP31: What next after UN climate talks collapse","Mon","https://www.aljazeera.com/news/2026/11/23/cop31-what-next-after-un-climate-talks-collapse"],
+["other","Al Jazeera","tv","Artificial superintelligence ‘arriving’, warns top Meta executive","Mon","https://www.aljazeera.com/economy/2026/11/23/ai-superintelligence-arriving-warns-top-meta-executive"]];
+/* WEEK:END */
+const CAT={earnings:'Earnings',speech:'Speeches',data:'Data',market:'Market',spec:'Speculation',geo:'Geopolitics',other:'Other'};
+const TAG={earnings:'Earnings',speech:'Speech',data:'Data',market:'Market',spec:'Speculation',geo:'Geopolitics',other:'Other'};
+const KIND={tv:'TV',wire:'Wire',social:'Social',web:'Web'};
+const EV=WEEK.ev,DAYS=WEEK.days;
+const ALL=[...Object.values(EV).flat(),...WEEK.wk];
+const cnt=c=>ALL.filter(e=>e[0]===c).length;
+
+/* ---------- scenes ---------- */
+const rays=(cx,cy,a0,a1,n,r0,r1,r2,st)=>{let d='';for(let i=0;i<n;i++){const a=(a0+(a1-a0)*i/Math.max(n-1,1))*Math.PI/180,r=i%2?r1:r2,c=Math.cos(a),s=Math.sin(a);d+=`M${(cx+r0*c).toFixed(1)} ${(cy+r0*s).toFixed(1)}L${(cx+r*c).toFixed(1)} ${(cy+r*s).toFixed(1)}`}return `<path d="${d}" style="${st}" fill="none" stroke-linecap="round"/>`};
+const SV='<svg viewBox="0 0 420 190" width="420" height="190" style="max-width:100%;height:auto" aria-hidden="true">';
+const hz=(y,fill,op)=>`<rect x="60" y="${y}" width="300" height="1.4" rx=".7" style="fill:${fill}" opacity="${op}"/>`;
+const refl=(y,fill)=>`<g style="fill:${fill}"><rect x="184" y="${y}" width="52" height="1.8" rx=".9" opacity=".34"/><rect x="196" y="${y+10}" width="28" height="1.8" rx=".9" opacity=".22"/><rect x="204" y="${y+20}" width="12" height="1.8" rx=".9" opacity=".14"/></g>`;
+const dots=(pts,fill)=>`<g style="fill:${fill}">${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="${p[2]}" opacity="${p[3]}"/>`).join('')}</g>`;
+/* ---------- moon: real phase for the viewer's day ---------- */
+const SOUTH=/^(Australia|Antarctica|Pacific\/(Auckland|Fiji|Tongatapu|Chatham|Noumea|Norfolk|Apia)|America\/(Sao_Paulo|Argentina|Santiago|Lima|Montevideo|Asuncion|La_Paz|Bahia|Fortaleza|Recife|Manaus|Cuiaba|Belem|Campo_Grande|Maceio)|Africa\/(Johannesburg|Maputo|Harare|Lusaka|Windhoek|Gaborone|Maseru|Mbabane|Luanda|Lubumbashi|Kinshasa)|Indian\/(Antananarivo|Mauritius|Reunion))/;
+function moonInfo(ts){const rd=Math.PI/180,T=(ts/86400000+2440587.5-2451545)/36525;
+const D=((297.8501921+445267.1114034*T-0.0018819*T*T)%360+360)%360,M=357.5291092+35999.0502909*T,Mp=134.9633964+477198.8675055*T+0.0087414*T*T;
+const i=180-D-6.289*Math.sin(Mp*rd)+2.1*Math.sin(M*rd)-1.274*Math.sin((2*D-Mp)*rd)-0.658*Math.sin(2*D*rd)-0.214*Math.sin(2*Mp*rd)-0.11*Math.sin(D*rd);
+const c=Math.cos(i*rd),k=(1+c)/2,names=['New moon','Waxing crescent','First quarter','Waxing gibbous','Full moon','Waning gibbous','Last quarter','Waning crescent'];
+return{D,c,k,wax:D<180,name:names[Math.floor(((D+22.5)%360)/45)]}}
+/* ---------- realistic, animated moon (procedural surface, real phase, slow libration) ---------- */
+const MN={W:768,H:384,A:null,GX:null,GY:null,raf:0,last:0,box:0};
+function mnBuild(){
+const W=MN.W,H=MN.H,rd=Math.PI/180;
+let seed=7;const rnd=()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296);
+const P=new Uint8Array(512),V=new Float32Array(256),pm=[...Array(256).keys()];
+for(let i=255;i>0;i--){const j=(rnd()*(i+1))|0;[pm[i],pm[j]]=[pm[j],pm[i]]}
+for(let i=0;i<512;i++)P[i]=pm[i&255];for(let i=0;i<256;i++)V[i]=rnd();
+const sm=t=>t*t*(3-2*t),lp=(a,b,t)=>a+(b-a)*t;
+const N=(x,y,z)=>{const X=Math.floor(x),Y=Math.floor(y),Z=Math.floor(z),fx=sm(x-X),fy=sm(y-Y),fz=sm(z-Z);
+const h=(a,b,c)=>V[P[P[P[(X+a)&255]+((Y+b)&255)]+((Z+c)&255)]];
+return lp(lp(lp(h(0,0,0),h(1,0,0),fx),lp(h(0,1,0),h(1,1,0),fx),fy),lp(lp(h(0,0,1),h(1,0,1),fx),lp(h(0,1,1),h(1,1,1),fx),fy),fz)};
+const fb=(x,y,z,o)=>{let s=0,a=.5,f=1,t=0;for(let i=0;i<o;i++){s+=a*N(x*f,y*f,z*f);t+=a;a*=.5;f*=2.03}return s/t};
+const A=new Float32Array(W*H),HT=new Float32Array(W*H),MR=new Float32Array(W*H);
+/* maria: lon, lat, half-width lon, half-height lat, darkness (approximate real positions) */
+const MARIA=[[-16,33,19,12,.95],[18,28,10,8,.9],[31,8,12,9,.85],[51,-4,9,8,.8],[59,17,6,5,.95],[-15,-21,11,8,.8],[-39,-24,7,6,.85],[-55,12,16,22,.85],[0,59,16,4,.55],[-23,-10,5,4,.75],[34,-15,5,4,.7],[3,14,6,5,.8],[-30,8,8,6,.7],[22,-35,6,4,.25],[-5,-40,10,8,.2]];
+for(let j=0;j<H;j++){const lat=90-(j+.5)/H*180,cl=Math.cos(lat*rd),sl=Math.sin(lat*rd);
+for(let i=0;i<W;i++){const lon=(i+.5)/W*360-180,x=cl*Math.sin(lon*rd),y=sl,z=cl*Math.cos(lon*rd),k=j*W+i;
+let m=0;const dz=(fb(x*7+3,y*7,z*7,4)-.5)*1.0;for(const b of MARIA){let dl=lon-b[0];if(dl>180)dl-=360;if(dl<-180)dl+=360;
+const d=Math.hypot(dl/b[2],(lat-b[1])/b[3])+dz;m+=b[4]*(1-sm(Math.min(1,Math.max(0,(d-.3)/1.0))))}
+m=Math.min(1,m);MR[k]=m;
+const hl=.76+.34*(fb(x*3.2,y*3.2,z*3.2,4)-.5)*1.0+.08*(fb(x*30,y*30,z*30,3)-.5)+.035*(fb(x*70,y*70,z*70,2)-.5);
+A[k]=hl*(1-.3*m*(.82+.36*fb(x*16,y*16,z*16,3)));HT[k]=.32*(fb(x*9+9,y*9,z*9,4)-.5)*(1-.75*m)}}
+/* craters */
+const stamp=(lon0,lat0,rho,o)=>{o=o||{};const cl0=Math.cos(lat0*rd),sl0=Math.sin(lat0*rd),span=Math.min(180,2.4*rho/Math.max(cl0,.12));
+const j0=Math.max(0,Math.floor((90-lat0-2.4*rho)/180*H)),j1=Math.min(H-1,Math.ceil((90-lat0+2.4*rho)/180*H));
+const D=(o.deep||.3)*rho*.55,Rm=(o.rim||.1)*rho*.55;
+for(let j=j0;j<=j1;j++){const lat=90-(j+.5)/H*180,cl=Math.cos(lat*rd),sl=Math.sin(lat*rd);
+for(let i=Math.floor((lon0+180-span)/360*W);i<=Math.ceil((lon0+180+span)/360*W);i++){const ii=((i%W)+W)%W,lon=(ii+.5)/W*360-180;
+let dl=lon-lon0;if(dl>180)dl-=360;if(dl<-180)dl+=360;
+const cd=sl*sl0+cl*cl0*Math.cos(dl*rd),d=Math.acos(Math.min(1,Math.max(-1,cd)))/rd,t=d/rho;if(t>2.4)continue;
+const k=j*W+ii;let h=0;
+if(t<1){h-=D*(1-t*t);if(rho>1.3)h+=.35*D*Math.exp(-((t/.12)**2))}
+h+=Rm*Math.exp(-(((t-1)/.17)**2));if(t>1)h+=.3*Rm*Math.exp(-(t-1)*2);
+HT[k]+=h;
+if(o.floor!==undefined&&t<.97)A[k]*=1-o.floor*Math.min(1,(1-t)*5);
+if(o.br)A[k]+=o.br*(t<1?.6:1)*Math.exp(-Math.max(0,t-1)*1.5)*(t<2.2?1:0)}}};
+/* many small craters (power-law sizes) */
+for(let n=0;n<1100;n++){const lon=rnd()*220-110,lat=Math.asin(rnd()*2-1)/rd,rho=Math.min(3,.28/Math.pow(rnd()+.001,.5));
+stamp(lon,lat,rho,{deep:.1+rnd()*.06,rim:.04+rnd()*.03,br:0})}
+/* named craters */
+[[-11,-43,2.3,.28,.15],[-20,10,1.7,.32,.15],[-38,8,1.2,.3,.1],[-47.5,23.7,1,.3,.15],[-9,51.6,1.9,.12,0,.55],[-68,-5,2.6,.2,0,.45],[61,-9,1.9,.3,0,.2],[61,-25,2.1,.3,0,.15],[-14,-58,2.8,.28,0,.1],[-2,-9,2.3,.14,0,.2],[-4,30,1.1,.25,0,.25],[-11.3,14.5,.9,.3,.25],[26,-11,1.6,.3,.2],[30,32,1.4,.2,0,.3],[17,50,1.5,.28,0],[-63,63,1.6,.25,0],[-1.5,-30,1.5,.3,.1],[-4,-27,1.3,.3,.1],[-8,-46,1,.3,.3],[45,13,1.1,.3,.1]].slice(0,0).forEach(c=>stamp(c[0],c[1],c[2],{deep:c[3],rim:.12,br:c[4],floor:c[5]}));
+/* bright ray systems around Tycho and Copernicus */
+const ray=(lon0,lat0,reach,amp,seedv)=>{const cl0=Math.cos(lat0*rd),sl0=Math.sin(lat0*rd);
+const j0=Math.max(0,Math.floor((90-lat0-reach)/180*H)),j1=Math.min(H-1,Math.ceil((90-lat0+reach)/180*H));
+for(let j=j0;j<=j1;j++){const lat=90-(j+.5)/H*180,cl=Math.cos(lat*rd),sl=Math.sin(lat*rd);
+for(let i=0;i<W;i++){const lon=(i+.5)/W*360-180;let dl=lon-lon0;if(dl>180)dl-=360;if(dl<-180)dl+=360;if(Math.abs(dl)>reach/Math.max(cl0,.2))continue;
+const d=Math.acos(Math.min(1,Math.max(-1,sl*sl0+cl*cl0*Math.cos(dl*rd))))/rd;if(d>reach||d<1.5)continue;
+const az=Math.atan2(Math.sin(dl*rd)*cl,cl0*sl-sl0*cl*Math.cos(dl*rd)),n=N(Math.cos(az)*5+seedv,Math.sin(az)*5,seedv*1.7),s=Math.max(0,(n-.56)/.3);
+A[j*W+i]+=amp*s*Math.pow(1-d/reach,1.4)}}};
+ray(-11,-43,48,.03,1.3);
+for(let k=0;k<W*H;k++)A[k]=Math.max(.04,Math.min(1,A[k]));
+/* height gradients (per degree of surface) */
+const GX=new Float32Array(W*H),GY=new Float32Array(W*H),dl=360/W,db=180/H;
+for(let j=0;j<H;j++){const cl=Math.max(.15,Math.cos((90-(j+.5)/H*180)*rd)),jn=Math.max(0,j-1),js=Math.min(H-1,j+1);
+for(let i=0;i<W;i++){const ie=(i+1)%W,iw=(i-1+W)%W,k=j*W+i;
+GX[k]=(HT[j*W+ie]-HT[j*W+iw])/(2*dl*cl);GY[k]=(HT[jn*W+i]-HT[js*W+i])/((js-jn)*db)}}
+MN.A=A;MN.GX=GX;MN.GY=GY}
+function mnDraw(cv,t){
+const m=moonInfo(Date.now()),S0=cv.width,Rp=S0*.464,ctx=cv.getContext('2d'),img=ctx.createImageData(S0,S0),D=img.data,
+W=MN.W,H=MN.H,A=MN.A,GX=MN.GX,GY=MN.GY,rd=Math.PI/180,south=SOUTH.test(S.prefs.tz);
+const th=(RM?0:6)*Math.sin(t/70*2*Math.PI)*rd,ph=(RM?0:4.5)*Math.sin(t/53*2*Math.PI+1)*rd,ct=Math.cos(th),st=Math.sin(th),cp=Math.cos(ph),sp=Math.sin(ph);
+const c=m.c,sx=(m.wax?1:-1)*Math.sqrt(Math.max(0,1-c*c)),sz=c,earth=.04+.1*(1-m.k);
+const samp=(F,fx,fy)=>{const x0=Math.floor(fx),y0=Math.floor(fy),ax=fx-x0,ay=fy-y0,xa=((x0%W)+W)%W,xb=(xa+1)%W,ya=Math.min(H-1,Math.max(0,y0)),yb=Math.min(H-1,ya+1);
+return (F[ya*W+xa]*(1-ax)+F[ya*W+xb]*ax)*(1-ay)+(F[yb*W+xa]*(1-ax)+F[yb*W+xb]*ax)*ay};
+for(let py=0;py<S0;py++)for(let px=0;px<S0;px++){
+let u=(px+.5-S0/2)/Rp,v=-(py+.5-S0/2)/Rp;if(south){u=-u;v=-v}
+const rr=u*u+v*v;if(rr>1.04)continue;const rs=Math.sqrt(rr),a=Math.min(1,Math.max(0,(1-rs)*Rp+.5));if(a<=0)continue;
+const z=Math.sqrt(Math.max(0,1-rr));
+/* view -> moon-fixed (libration) */
+const ax=u*ct+z*st,az=-u*st+z*ct,bx=ax,by=v*cp-az*sp,bz=v*sp+az*cp;
+const lon=Math.atan2(bx,bz),lat=Math.asin(Math.max(-1,Math.min(1,by))),fx=(lon/Math.PI*.5+.5)*W-.5,fy=(.5-lat/Math.PI)*H-.5;
+const alb=samp(A,fx,fy),gx=samp(GX,fx,fy),gy=samp(GY,fx,fy),sl=Math.sin(lat),cl=Math.cos(lat),slo=Math.sin(lon),clo=Math.cos(lon),B=.55*(.2+.8*z);
+let nx=bx-B*(gx*clo+gy*(-sl*slo)),ny=by-B*(gy*cl),nz=bz-B*(gx*(-slo)+gy*(-sl*clo));
+const nl=Math.hypot(nx,ny,nz)||1;nx/=nl;ny/=nl;nz/=nl;
+/* back to view frame */
+const qy=ny*cp+nz*sp,qz=-ny*sp+nz*cp,qx=nx*ct-qz*st,qz2=nx*st+qz*ct;
+const mu0p=qx*sx+qz2*sz,zc=Math.max(z,.17),mu0g=u*sx+zc*sz,mu0=mu0g+(mu0p-mu0g)*Math.min(1,z*2.2),mu=zc;
+let L=mu0>0?mu0/(mu0+mu)*2.1:0;
+const lit=alb*L*(.8+.2*Math.sqrt(z)),es=alb*earth*(.6+.4*z),o=(py*S0+px)*4;
+const r1=Math.min(1,lit*1.0+es*.62),g1=Math.min(1,lit*.972+es*.74),b1=Math.min(1,lit*.91+es*1.0);
+D[o]=Math.pow(r1,.88)*255;D[o+1]=Math.pow(g1,.88)*255;D[o+2]=Math.pow(b1,.88)*255;D[o+3]=a*255}
+ctx.putImageData(img,0,0)}
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function mnStart(){if(MN.raf||!document.getElementById('mnCv'))return;
+const loop=ts=>{const cv=document.getElementById('mnCv');if(!cv||document.hidden){MN.raf=0;if(cv&&document.hidden)document.addEventListener('visibilitychange',mnStart,{once:true});return}
+if(!MN.A)mnBuild();
+if(ts-MN.last>(RM?1e9:90)||MN.box!==cv){MN.last=ts;MN.box=cv;mnDraw(cv,ts/1000)}
+MN.raf=RM&&cv.dataset.done?0:requestAnimationFrame(loop);cv.dataset.done=1};
+MN.raf=requestAnimationFrame(loop)}
+function moonSVG(ts){const m=moonInfo(ts||Date.now()),cx=210,cy=118,O2='#F2E6C8',label=(m.name+' · '+Math.round(m.k*100)+'%').toUpperCase(),dpr=Math.min(2,Math.max(1.5,window.devicePixelRatio||2)),sz=Math.round(198*dpr);
+let sd=11;const rn=()=>((sd=(sd*1664525+1013904223)>>>0)/4294967296),stars=[];
+for(let i=0;i<34;i++){let x=rn()*420,y=rn()*250;if(Math.hypot(x-cx,y-cy)<100){i--;continue}stars.push([x,y,.55+rn()*rn()*1.1,.4+rn()*.5])}
+const ha=+(.26+.3*m.k).toFixed(3),pt=(r,a)=>[(cx+r*Math.cos(a*Math.PI/180)).toFixed(1),(cy+r*Math.sin(a*Math.PI/180)).toFixed(1)],d1=pt(104,-38),d2=pt(116,152),d3=pt(104,64),
+rings=`<circle cx="${cx}" cy="${cy}" r="104" fill="none" stroke="#C9D6FF" stroke-width=".8" opacity=".42"/><circle class="mnr" cx="${cx}" cy="${cy}" r="116" fill="none" stroke="#C9D6FF" stroke-width=".8" stroke-dasharray="2 7" opacity=".34"/><g fill="#DCE6FF"><circle cx="${d1[0]}" cy="${d1[1]}" r="2.4" opacity=".85"/><circle cx="${d2[0]}" cy="${d2[1]}" r="1.8" opacity=".6"/><circle cx="${d3[0]}" cy="${d3[1]}" r="1.5" opacity=".5"/></g>`;
+return `<div class="mn"><svg viewBox="0 0 420 250" aria-hidden="true">${stars.map((s,i)=>`<circle${i%4?'':` class="tw" style="animation-delay:-${(i*1.37)%6}s;animation-duration:${3.4+(i%4)*1.1}s"`} cx="${s[0].toFixed(1)}" cy="${s[1].toFixed(1)}" r="${s[2].toFixed(2)}" fill="#EEF3FF" opacity="${s[3].toFixed(2)}"/>`).join('')}<text x="210" y="240" text-anchor="middle" style="font:500 9.5px Inter,sans-serif;letter-spacing:.26em;fill:var(--t2)">${label}</text></svg><canvas id="mnCv" width="${sz}" height="${sz}" role="img" aria-label="${m.name}, ${Math.round(m.k*100)}% illuminated"></canvas></div>`}
+/* ---------- suns: a different design on different days ---------- */
+const GD='<radialGradient id="dg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE9A8" stop-opacity=".55"/><stop offset="1" stop-color="#FFE9A8" stop-opacity="0"/></radialGradient><radialGradient id="ds" cx=".42" cy=".38" r=".75"><stop offset="0" stop-color="#FFFCEE"/><stop offset=".45" style="stop-color:var(--o1)"/><stop offset=".8" style="stop-color:var(--o2)"/><stop offset="1" style="stop-color:var(--o3)"/></radialGradient>';
+const GM='<radialGradient id="mg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFD59A" stop-opacity=".5"/><stop offset="1" stop-color="#FFD59A" stop-opacity="0"/></radialGradient><radialGradient id="ms" cx=".45" cy=".4" r=".7"><stop offset="0" style="stop-color:var(--o1)"/><stop offset=".6" style="stop-color:var(--o2)"/><stop offset="1" style="stop-color:var(--o3)"/></radialGradient>';
+const GE='<radialGradient id="eg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFB27A" stop-opacity=".55"/><stop offset="1" stop-color="#FF8A6B" stop-opacity="0"/></radialGradient><linearGradient id="es" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD9A0"/><stop offset="1" stop-color="#FF9D6B"/></linearGradient>';
+const O2='var(--o2)',ST=(c,w,o)=>`style="stroke:${c}" stroke-width="${w}" opacity="${o}" fill="none"`;
+const SUNS={
+day:[
+()=>SV+`<defs>${GD}</defs><circle cx="210" cy="90" r="104" fill="url(#dg)"/>`+rays(210,90,0,345,24,40,50,62,'stroke:var(--o2);stroke-width:1.1;opacity:.5')+`<circle cx="210" cy="90" r="28" fill="url(#ds)"/><circle cx="210" cy="90" r="35" ${ST(O2,.7,.38)}/><g style="fill:var(--ib)" opacity=".6"><rect x="76" y="132" width="120" height="2.4" rx="1.2"/><rect x="104" y="141" width="84" height="2.4" rx="1.2" opacity=".7"/><rect x="238" y="46" width="96" height="2.4" rx="1.2"/><rect x="262" y="55" width="62" height="2.4" rx="1.2" opacity=".7"/></g></svg>`,
+()=>SV+`<defs>${GD}</defs><circle cx="210" cy="92" r="108" fill="url(#dg)"/><circle cx="210" cy="92" r="26" fill="url(#ds)"/>`+[[38,.5],[52,.34],[68,.22],[86,.13]].map(a=>`<circle cx="210" cy="92" r="${a[0]}" ${ST(O2,.8,a[1])}/>`).join('')+dots([[248,65,2.2,.7],[162,114,1.8,.55],[270,112,1.5,.4],[150,70,1.3,.35]],O2)+`</svg>`,
+()=>SV+`<defs>${GD}</defs><circle cx="210" cy="92" r="104" fill="url(#dg)"/><circle cx="210" cy="92" r="26" fill="url(#ds)"/><circle cx="210" cy="92" r="46" ${ST(O2,.8,.5)} stroke-dasharray="1.5 5"/><circle cx="210" cy="92" r="64" ${ST(O2,.8,.42)} stroke-dasharray="46 12 8 12" transform="rotate(-24 210 92)"/><circle cx="210" cy="92" r="82" ${ST(O2,.7,.26)} stroke-dasharray="3 9"/>`+dots([[256,60,2.6,.8],[149,121,2,.65],[283,116,1.6,.5]],O2)+`</svg>`,
+()=>SV+`<defs>${GD}<linearGradient id="dl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color:var(--o2)" stop-opacity="0"/><stop offset=".5" style="stop-color:var(--o2)" stop-opacity=".8"/><stop offset="1" style="stop-color:var(--o2)" stop-opacity="0"/></linearGradient></defs><circle cx="210" cy="90" r="96" fill="url(#dg)"/><linearGradient id="dv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--o2)" stop-opacity="0"/><stop offset=".5" style="stop-color:var(--o2)" stop-opacity=".8"/><stop offset="1" style="stop-color:var(--o2)" stop-opacity="0"/></linearGradient><rect x="30" y="89.2" width="360" height="1.6" fill="url(#dl)"/><rect x="209.2" y="40" width="1.6" height="100" fill="url(#dv)" opacity=".55"/><circle cx="210" cy="90" r="24" fill="url(#ds)"/><g ${ST(O2,.8,.35)}><circle cx="270" cy="124" r="8"/><circle cx="296" cy="142" r="4"/><circle cx="150" cy="56" r="6"/><circle cx="128" cy="40" r="3"/></g></svg>`,
+()=>{let t='';for(let i=0;i<72;i++){const a=i*5*Math.PI/180,r0=i%6?47:44,r1=i%6?51:56;t+=`M${(210+r0*Math.cos(a)).toFixed(1)} ${(90+r0*Math.sin(a)).toFixed(1)}L${(210+r1*Math.cos(a)).toFixed(1)} ${(90+r1*Math.sin(a)).toFixed(1)}`}return SV+`<defs>${GD}</defs><circle cx="210" cy="90" r="100" fill="url(#dg)"/><path d="${t}" ${ST(O2,.9,.55)}/><circle cx="210" cy="90" r="40" ${ST(O2,.7,.4)}/><circle cx="210" cy="90" r="24" fill="url(#ds)"/><circle cx="210" cy="90" r="70" ${ST(O2,.6,.18)}/></svg>`}],
+morning:[
+()=>SV+`<defs>${GM}<clipPath id="mk"><rect x="0" y="0" width="420" height="130"/></clipPath></defs><g clip-path="url(#mk)"><circle cx="210" cy="124" r="104" fill="url(#mg)"/>`+rays(210,124,196,344,17,38,48,60,'stroke:var(--o2);stroke-width:1.1;opacity:.55')+`<circle cx="210" cy="124" r="29" fill="url(#ms)"/><circle cx="210" cy="124" r="36" ${ST(O2,.7,.4)}/></g>${hz(130,O2,.55)}${refl(141,O2)}`+dots([[88,36,1.1,.5],[334,28,1,.45],[296,64,.8,.35],[126,74,.8,.3]],'var(--lb)')+`</svg>`,
+()=>SV+`<defs>${GM}<linearGradient id="fx" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000"/><stop offset=".2" stop-color="#fff"/><stop offset=".8" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="fm" maskUnits="userSpaceOnUse" x="0" y="0" width="420" height="190"><rect width="420" height="190" fill="url(#fx)"/></mask><linearGradient id="fv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)" stop-opacity="1"/><stop offset="1" style="stop-color:var(--rs)" stop-opacity="0"/></linearGradient><linearGradient id="fv2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--bd)" stop-opacity=".6"/><stop offset="1" style="stop-color:var(--bd)" stop-opacity="0"/></linearGradient></defs><circle cx="210" cy="118" r="108" fill="url(#mg)"/><circle cx="210" cy="116" r="27" fill="url(#ms)"/><g mask="url(#fm)"><path d="M0 124C60 108 100 120 150 106S250 122 300 108S380 114 420 108V176H0Z" fill="url(#fv2)"/><path d="M0 150C70 132 130 150 200 138S330 150 420 136V176H0Z" fill="url(#fv)"/></g>`+dots([[96,40,1.1,.5],[330,34,1,.45],[286,70,.8,.35]],'var(--lb)')+`<path d="M120 62q4-4 8 0M134 54q3-3 6 0" fill="none" style="stroke:var(--t2)" stroke-width="1" stroke-linecap="round" opacity=".5"/></svg>`,
+()=>SV+`<defs>${GM}<clipPath id="mk"><rect x="0" y="0" width="420" height="130"/></clipPath></defs><g clip-path="url(#mk)"><circle cx="210" cy="130" r="100" fill="url(#mg)"/><circle cx="210" cy="130" r="26" fill="url(#ms)"/>`+[[38,.5],[52,.36],[68,.24],[86,.14],[106,.08]].map(a=>`<circle cx="210" cy="130" r="${a[0]}" ${ST(O2,.8,a[1])}/>`).join('')+`</g>${hz(130,O2,.55)}${refl(141,O2)}</svg>`,
+()=>SV+`<defs>${GM}<clipPath id="mk"><rect x="0" y="0" width="420" height="130"/></clipPath><linearGradient id="mb" x1="0" y1="1" x2="0" y2="0"><stop offset="0" style="stop-color:var(--o2)" stop-opacity=".34"/><stop offset="1" style="stop-color:var(--o2)" stop-opacity="0"/></linearGradient></defs><g clip-path="url(#mk)"><circle cx="210" cy="124" r="100" fill="url(#mg)"/><path d="M210 124L120 0H156ZM210 124L176 0H198ZM210 124L222 0H244ZM210 124L264 0H300ZM210 124L318 0H352Z" fill="url(#mb)"/><circle cx="210" cy="124" r="27" fill="url(#ms)"/></g>${hz(130,O2,.55)}${refl(141,O2)}</svg>`],
+evening:[
+()=>SV+`<defs>${GE}</defs><circle cx="210" cy="110" r="100" fill="url(#eg)"/><path d="M178 110a32 32 0 0 1 64 0z" fill="url(#es)"/>${hz(110,'#FFB890',.55)}${refl(122,'#FFB890')}`+dots([[96,40,1.3,.7],[330,30,1.3,.7],[278,66,1,.5]],'#FFF3D6')+`</svg>`,
+()=>SV+`<defs>${GE}<clipPath id="ek"><rect x="0" y="0" width="420" height="112"/></clipPath><mask id="eb" maskUnits="userSpaceOnUse" x="0" y="0" width="420" height="190"><rect width="420" height="190" fill="#fff"/><rect x="170" y="88" width="80" height="2.6" fill="#000"/><rect x="170" y="96" width="80" height="3.4" fill="#000"/><rect x="170" y="104" width="80" height="4.4" fill="#000"/></mask></defs><circle cx="210" cy="112" r="104" fill="url(#eg)"/><g clip-path="url(#ek)"><circle cx="210" cy="112" r="34" fill="url(#es)" mask="url(#eb)"/></g>${hz(112,'#FFB890',.55)}${refl(124,'#FFB890')}`+dots([[96,42,1.3,.7],[330,32,1.3,.7],[278,70,1,.5]],'#FFF3D6')+`</svg>`,
+()=>SV+`<defs>${GE}<clipPath id="ek"><rect x="0" y="0" width="420" height="112"/></clipPath></defs><circle cx="210" cy="112" r="104" fill="url(#eg)"/><g clip-path="url(#ek)"><circle cx="210" cy="112" r="30" fill="url(#es)"/>`+[[42,.5],[56,.34],[72,.22],[90,.12]].map(a=>`<circle cx="210" cy="112" r="${a[0]}" ${ST('#FFB890',.8,a[1])}/>`).join('')+`</g>${hz(112,'#FFB890',.55)}${refl(124,'#FFB890')}`+`<path d="M130 58q4-4 8 0M144 50q3-3 6 0" fill="none" stroke="#FFF3D6" stroke-width="1" stroke-linecap="round" opacity=".6"/></svg>`,
+()=>SV+`<defs>${GE}<linearGradient id="fx" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000"/><stop offset=".2" stop-color="#fff"/><stop offset=".8" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="fm" maskUnits="userSpaceOnUse" x="0" y="0" width="420" height="190"><rect width="420" height="190" fill="url(#fx)"/></mask><linearGradient id="fv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)" stop-opacity="1"/><stop offset="1" style="stop-color:var(--rs)" stop-opacity="0"/></linearGradient><linearGradient id="fv2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--bd)" stop-opacity=".6"/><stop offset="1" style="stop-color:var(--bd)" stop-opacity="0"/></linearGradient><linearGradient id="el" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFB890" stop-opacity="0"/><stop offset=".5" stop-color="#FFB890" stop-opacity=".85"/><stop offset="1" stop-color="#FFB890" stop-opacity="0"/></linearGradient></defs><circle cx="210" cy="114" r="100" fill="url(#eg)"/><path d="M182 114a28 28 0 0 1 56 0z" fill="url(#es)"/><rect x="40" y="113.2" width="340" height="1.6" fill="url(#el)"/><g mask="url(#fm)"><path d="M0 142C70 128 130 142 200 134S330 142 420 130V180H0Z" fill="url(#fv)"/></g>`+dots([[96,42,1.3,.7],[330,32,1.3,.7]],'#FFF3D6')+`</svg>`]};
+function sceneHTML(k){if(k==='night')return moonSVG();const L=SUNS[k]||SUNS.day,n=L.length;return L[((dayNum()%n)+n)%n]()}
+const GREET={morning:'Good morning, boss.',day:'Good afternoon, boss.',evening:'Good evening, boss.'};
+
+/* ---------- state ---------- */
+const S={filter:'all',key:false,nk:'all',brief:false,side:'long',cur:{dep:'1000',lev:'5',entry:'100',mm:'0.5'},sc:{long:{},short:{}}};
+const SAMPLE={long:['105','110','120','150'],short:['95','90','80','70']};
+const $=s=>document.querySelector(s);
+
+/* ---------- daily home text ---------- */
+const HOLN={'2026-11-26':'Thanksgiving','2026-12-25':'Christmas Day','2027-01-01':"New Year's Day",'2027-01-18':'Martin Luther King Jr. Day','2027-02-15':"Presidents' Day",'2027-03-26':'Good Friday','2027-05-31':'Memorial Day'};
+const WKKEY=Object.fromEntries(WEEK.days.map(d=>[d.iso,d.k]));
+const WDL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+function marketPhase(){const now=Date.now(),[y,m,d]=nyDate(now),wd=new Date(Date.UTC(y,m,d)).getUTCDay(),key=iso(y,m,d);
+if(wd!==0&&wd!==6&&!HOL.includes(key)){const e=!!EARLY[key],o=nyTs(y,m,d,9,30),c=nyTs(y,m,d,e?13:16,0),st=nyTs(y,m,d,4,0),en=nyTs(y,m,d,e?17:20,0);
+if(now>=o&&now<c)return'open';if(now>=st&&now<o)return'pre';if(now>=c&&now<en)return'after'}
+return'closed'}
+const cd=ts=>`${kuS(ts)} your time`;
+const lcFirst=t=>/^[A-Z][a-z]/.test(t)?t[0].toLowerCase()+t.slice(1):t;
+const capFirst=t=>t.charAt(0).toUpperCase()+t.slice(1);
+const joinList=a=>a.length>1?a.slice(0,-1).join(', ')+' and '+a[a.length-1]:(a[0]||'');
+const NUDGE={
+heavy:{morning:['Big calendar ahead. Eat a real breakfast and keep your size modest.','A loaded day. Start calm and let the numbers come to you.'],day:['It is a loaded day. Step away for ten minutes so you meet it fresh.','A lot is moving. Drink some water and trade only your plan.'],evening:['Tomorrow is crowded. Plan it now, then give the evening to yourself.','A busy session is coming. Eat well, and write tomorrow’s plan before you rest.'],night:['A heavy day is coming, so sleep is your best preparation.','Put the plan down for the night. A rested mind trades better than a tired one.']},
+normal:{morning:['A steady day on the calendar. Take your time and start the morning slowly.','Nothing extreme ahead. Coffee, a walk, then the screen.'],day:['The day is moving at a calm pace. A short walk will help more than another refresh.','Keep it simple this afternoon. Eat properly and check your plan, not your mood.'],evening:['The day is done. Review it kindly, then enjoy your evening.','Close the laptop for dinner. The plan will still be there later.'],night:['It is late. Sleep is part of your edge.','Close the tabs. Good decisions come from a rested mind.']},
+light:{morning:['A quiet calendar, so there is room to breathe. Use the morning well.','Nothing much is scheduled. A good day to do something that is not a chart.'],day:['A light day. Let the afternoon be slow.','Quiet markets are a good time to look up from the screen.'],evening:['A quiet evening, so give it to people you like.','Nothing to chase tonight. Enjoy it.'],night:['Nothing urgent tonight, so rest well.','A quiet night ahead. Switch off and sleep.']},
+off:{morning:['No bell today, so spend the morning on people, not positions.','The charts can wait. Step outside first.'],day:['The markets are closed, so let the afternoon be yours.','Cook something, call someone, and let the week settle.'],evening:['No charts tonight. Good food and good company.','Let the evening be slow. The markets will be there later.'],night:['No markets and no alarms. Sleep well.','The world is quiet tonight, so enjoy the stillness.']}};
+const WKTAG={Mon:['A new week starts.','Fresh week, clean page.'],Fri:['The week is almost done.','Friday, so finish well.'],Sat:['It is the weekend.','The weekend is yours.'],Sun:['Sunday sets the tone for the week.','A calm Sunday makes a calmer Monday.']};
+function homeLines(){
+const now=Date.now(),s=mktStatus(),ph=marketPhase(),[y,m,d]=nyDate(now),todayKey=iso(y,m,d),wdET=new Date(Date.UTC(y,m,d)).getUTCDay();
+const nxt=new Date(Date.UTC(y,m,d+1)),tmrKey=iso(nxt.getUTCFullYear(),nxt.getUTCMonth(),nxt.getUTCDate());
+const rel=ts=>{const df=Math.round((Date.parse(dayKey('America/New_York',ts))-Date.parse(todayKey))/86400000);return df===0?'today':df===1?'tomorrow':etWd(ts)};
+const tz=S.prefs.tz,uw=tzWall(tz,now).weekday,wdName=new Intl.DateTimeFormat('en-US',{timeZone:tz,weekday:'long'}).format(now);
+const per=({morning:'morning',day:'afternoon',evening:'evening',night:'night'})[curTheme]||'day',dn=dayNum();
+const pick=a=>a[((dn%a.length)+a.length)%a.length];
+/* market sentence */
+const bell=ts=>`${kuS(ts)} your time`;
+let st;
+if(ph==='open')st=`The US session is live until ${bell(s.at)}.`;
+else if(ph==='pre')st=`Pre-market is live, with the bell at ${bell(s.openTs)}.`;
+else if(ph==='after')st='The US session has wrapped.';
+else if(wdET===0||wdET===6)st='The US markets are closed for the weekend.';
+else if(HOLN[todayKey])st=`The US markets are closed for ${HOLN[todayKey]}.`;
+else st=`The US markets reopen ${rel(s.openTs)} at ${bell(s.openTs)}.`;
+const sk=dayKey('America/New_York',s.openTs),ev=(EV[WKKEY[sk]]||[]);
+const core=ev.filter(e=>['data','earnings','speech'].includes(e[0]));
+const top=(t,min)=>{const l=core.map((e,i)=>[e,i]).filter(x=>x[0][0]===t).sort((a,b)=>(b[0][4]||1)-(a[0][4]||1)||a[1]-b[1]).map(x=>x[0]);const k=l.filter(e=>(e[4]||1)>=min);return(k.length?k:l.slice(0,1)).map(e=>e[2])};
+const data=top('data',3).map(x=>lcFirst(x.split(',')[0])),earn=top('earnings',2);
+const when=sk===todayKey?'today':rel(s.openTs);
+let head='';
+if(data.length)head=`${capFirst(when)} brings ${joinList(data.slice(0,2))}${earn.length?`, with ${joinList(earn.slice(0,2))} reporting`:''}.`;
+else if(earn.length)head=`${capFirst(when)} brings earnings from ${joinList(earn.slice(0,2))}.`;
+const n3=core.filter(e=>(e[4]||1)>=3).length,load=!ev.length?'normal':n3>=3?'heavy':n3>=1?'normal':'light';
+let l1=`${wdName} ${per}, boss. `;
+if(HOLN[todayKey])l1+=st;
+else if(HOLN[tmrKey])l1+=`${st} Tomorrow they rest for ${HOLN[tmrKey]}.`;
+else if(EARLY[todayKey]&&ph!=='after')l1+=`It is a shortened session, closing ${bell(s.at)}.`;
+else if(EARLY[tmrKey])l1+=`${st} Tomorrow’s session ends early.`;
+else l1+=`${st}${head?' '+head:''}`;
+/* life line: load of the day x time of day, plus a weekday touch */
+const lk=(uw==='Sat'||uw==='Sun'||wdET===0||wdET===6||HOLN[todayKey])&&ph!=='open'?'off':HOLN[tmrKey]&&(per==='evening'||per==='night')?'off':load;
+let l2=pick(NUDGE[lk][curTheme]||NUDGE[lk].night);
+const tag=WKTAG[uw];if(tag&&per!=='night')l2=pick(tag)+' '+l2;
+return[l1,l2]}
+/* ---------- quote of the day ---------- */
+const QUOTES=[["It never was my thinking that made the big money for me. It always was my sitting.", "Edwin Lefèvre", "Reminiscences of a Stock Operator", "Patience", "Being right is not enough. You have to stay in the trade."], ["There is nothing new in Wall Street. There can’t be because speculation is as old as the hills.", "Edwin Lefèvre", "Reminiscences of a Stock Operator", "Humility", "Today’s excitement has happened before. Read history before you chase."], ["The investor’s chief problem, and even his worst enemy, is likely to be himself.", "Benjamin Graham", "The Intelligent Investor", "Mind", "Your rules exist to protect you from your own impulses."], ["Investing is most intelligent when it is most businesslike.", "Benjamin Graham", "The Intelligent Investor", "Discipline", "Treat every trade as a business decision, not a feeling."], ["In the short run, the market is a voting machine, but in the long run it is a weighing machine.", "Benjamin Graham", "as retold by Warren Buffett", "Patience", "Popularity moves price today. Value decides it eventually."], ["You can’t predict. You can prepare.", "Howard Marks", "Memo, 2001", "Prep", "Spend today’s energy on your plan, not on forecasts."], ["Losers average losers.", "Paul Tudor Jones", "Market Wizards", "Risk", "Never add to a position just because it hurts."], ["Everybody gets what they want out of the market.", "Ed Seykota", "Market Wizards", "Mind", "Ask what you really want from it, and whether your habits agree."], ["The big money is not in the buying and selling, but in the waiting.", "Charlie Munger", "", "Patience", "Every unnecessary trade costs you something."], ["Invert, always invert.", "Carl Jacobi", "a rule Charlie Munger lived by", "Mind", "Ask how the trade could fail before you ask how it could win."], ["You only find out who is swimming naked when the tide goes out.", "Warren Buffett", "2001 shareholder letter", "Risk", "Leverage looks like genius until the tide turns."], ["Risk comes from not knowing what you’re doing.", "Warren Buffett", "", "Risk", "Know your size, your stop and your reason before you enter."], ["Know what you own, and know why you own it.", "Peter Lynch", "", "Discipline", "Write the reason down. Check it when the price moves."], ["The four most dangerous words in investing are: this time it’s different.", "Sir John Templeton", "", "Humility", "When the story sounds new, check the numbers again."], ["Bull markets are born on pessimism, grow on skepticism, mature on optimism, and die on euphoria.", "Sir John Templeton", "", "Mind", "Notice the mood around you, then notice your own."], ["I’m only rich because I know when I’m wrong.", "George Soros", "", "Humility", "Cutting a bad trade quickly is a skill, not a defeat."], ["The stock market is a device for transferring money from the impatient to the patient.", "Warren Buffett", "", "Patience", "Waiting for your setup is part of the work."], ["Wind extinguishes a candle and energizes fire.", "Nassim Nicholas Taleb", "Antifragile", "Resilience", "Let volatility strengthen your plan instead of breaking it."], ["Missing a train is only painful if you run after it.", "Nassim Nicholas Taleb", "The Bed of Procrustes", "Discipline", "A missed trade costs nothing. Chasing it can cost a lot."], ["Spending money to show people how much money you have is the fastest way to have less money.", "Morgan Housel", "The Psychology of Money", "Mind", "Real wealth is the part you don’t show."], ["Nothing in life is as important as you think it is, while you are thinking about it.", "Daniel Kahneman", "Thinking, Fast and Slow", "Mind", "Step back before a big decision. The feeling will shrink."], ["The first principle is that you must not fool yourself, and you are the easiest person to fool.", "Richard Feynman", "Caltech commencement address, 1974", "Humility", "Review your losing trades as honestly as your winning ones."], ["What stands in the way becomes the way.", "Marcus Aurelius", "Meditations", "Resilience", "Make today’s obstacle the thing you practise on."], ["Waste no more time arguing about what a good man should be. Be one.", "Marcus Aurelius", "Meditations", "Discipline", "Stop planning the ideal trader. Act like one today."], ["Very little is needed to make a happy life.", "Marcus Aurelius", "Meditations", "Mind", "More profit is not the same as more peace."], ["If it is not right, do not do it; if it is not true, do not say it.", "Marcus Aurelius", "Meditations", "Discipline", "Skip the trade you would not be proud to explain."], ["We suffer more often in imagination than in reality.", "Seneca", "Letters to Lucilius", "Mind", "Most of what you fear in a trade never happens."], ["It is not that we have a short time to live, but that we waste much of it.", "Seneca", "On the Shortness of Life", "Discipline", "Guard your attention the way you guard your capital."], ["He suffers more than necessary who suffers before it is necessary.", "Seneca", "Letters to Lucilius", "Mind", "Place your stop, then stop worrying about it."], ["Men are disturbed not by things, but by the views which they take of them.", "Epictetus", "Enchiridion", "Mind", "The price is only a number. The fear is your interpretation."], ["No man is free who is not master of himself.", "Epictetus", "", "Discipline", "Freedom in the market starts with controlling your own reactions."], ["Victorious warriors win first and then go to war, while defeated warriors go to war first and then seek to win.", "Sun Tzu", "The Art of War", "Prep", "Do the analysis before the entry, not after it."], ["If you can meet with Triumph and Disaster and treat those two impostors just the same.", "Rudyard Kipling", "If—", "Mind", "Meet a big win and a big loss with the same calm."], ["Plans are worthless, but planning is everything.", "Dwight D. Eisenhower", "1957 speech", "Prep", "Events will change the plan. The thinking behind it stays useful."], ["A ship in harbor is safe, but that is not what ships are built for.", "John A. Shedd", "Salt from My Attic", "Resilience", "Size your risk so you can sail, not so you never leave."], ["We are what we repeatedly do. Excellence, then, is not an act, but a habit.", "Will Durant", "The Story of Philosophy", "Discipline", "Your routine is your edge."], ["In the fields of observation chance favors only the prepared mind.", "Louis Pasteur", "Lecture, 1854", "Prep", "Luck finds the trader who did the homework."], ["He who has a why to live can bear almost any how.", "Friedrich Nietzsche", "Twilight of the Idols", "Resilience", "Know why you trade, and drawdowns become easier to bear."], ["I learned that courage was not the absence of fear, but the triumph over it.", "Nelson Mandela", "Long Walk to Freedom", "Resilience", "Take the planned trade even when your pulse is up."]];
+const QRISK=new Set(['Risk','Discipline','Prep','Humility']);
+function dayNum(){return Math.floor(Date.parse(dayKey(S.prefs.tz,Date.now()))/86400000)}
+function pickQuote(pool){const n=pool.length;let k=7;const g=(a,b)=>b?g(b,a%b):a;while(g(k,n)!==1)k++;return pool[((dayNum()*k)%n+n)%n]}
+function quoteBlock(risk,compact){
+const pool=risk?QUOTES.filter(q=>QRISK.has(q[3])):QUOTES,q=pickQuote(pool);
+const d=new Intl.DateTimeFormat('en-GB',{timeZone:S.prefs.tz,weekday:'long',day:'numeric',month:'long'}).format(new Date());
+return `<figure class="qd${compact?' cmp':''}">${compact?'':`<div class="l">Quote of the day · ${d}</div>`}<blockquote><span class="qm" aria-hidden="true">“</span>${q[0]}</blockquote><figcaption><b>${q[1]}</b>${q[2]?' · <i>'+q[2]+'</i>':''}</figcaption><div class="qt"><span class="pill">${q[3]}</span><span>${q[4]}</span></div></figure>`}
+/* ---------- pages ---------- */
+function home(){
+const k=curTheme,{h}=ktime();
+const greet=k==='night'?(h<5?'Burning the midnight oil, boss?':'Good evening, boss.'):GREET[k];
+const f=S.filter,key=S.key;
+const pass=e=>(f==='all'||e[0]===f)&&(!key||(e[4]||1)>=3);
+const chip=(c,label,n)=>`<button class="chip cc cc-${c} ${f===c?'sel':''}" aria-pressed="${f===c}" data-act="filter" data-v="${c}">${label} <i>${n}</i></button>`;
+const evH=(e,iso)=>`<div class="ev k-${e[0]}"><div><span class="tg t-${e[0]}">${TAG[e[0]]}</span><span class="tm">${(e[4]||1)>=3?'<em class="st" title="Market-moving">★</em>':''}${locT(e[1],iso)}</span></div><b>${locT(e[2],iso)}</b>${e[3]?`<i>${locT(e[3],iso)}</i>`:''}</div>`;
+let shown=0;
+const mon=d=>new Date(d.iso+'T12:00:00Z').toLocaleString('en-US',{month:'short',timeZone:'UTC'});
+const cards=DAYS.map(d=>{
+const evs=(EV[d.k]||[]).filter(pass);shown+=evs.length;
+return `<div class="c"><div class="l">${d.name}</div><div class="dd">${d.num} <span>${mon(d)}</span></div><span class="pill ${d.pc==='p'?'':d.pc}">${locT(d.pill,d.iso)}</span><div style="margin-top:16px">${evs.map(e=>evH(e,d.iso)).join('')||'<div class="ev em">Nothing in this view, boss.</div>'}</div></div>`}).join('');
+const wke=WEEK.wk.filter(pass);shown+=wke.length;
+const wkCard=`<div class="c"><div class="l">All week · themes, positioning and what to watch</div><div class="wk" style="margin-top:12px">${wke.map(e=>evH(e)).join('')||'<div class="ev em">Nothing in this view, boss.</div>'}</div></div>`;
+const nws=NEWS.filter(n=>(f==='all'||n[0]===f)&&(S.nk==='all'||n[2]===S.nk));
+const nch=(c,label)=>`<button class="chip ${S.nk===c?'sel':''}" style="min-height:36px;padding:0 14px;font-size:13px" aria-pressed="${S.nk===c}" data-act="nkind" data-v="${c}">${label}</button>`;
+const newsH=nws.map(n=>`<a class="nw hl" href="${n[5]}" target="_blank" rel="noopener noreferrer"><div class="hm"><span class="ks ks-${n[2]}">${KIND[n[2]]}</span><span class="ol">${n[1]}</span><span class="tg t-${n[0]}">${TAG[n[0]]}</span></div><div class="ht">${locT(n[3])}</div><span>${locT(n[4])}</span></a>`).join('')||'<div class="ev em">No headlines in this view, boss.</div>';
+const summary=`Showing ${shown} of ${ALL.length} items${f==='all'?'':' · '+CAT[f]}${key?' · key events only':''} · ${nws.length} of ${NEWS.length} headlines`;
+const keyList=DAYS.map(d=>{const t=(EV[d.k]||[]).filter(e=>(e[4]||1)>=3&&e[0]!=='market');return t.length?`<b>${d.name}</b>: ${joinList(t.slice(0,3).map(e=>e[2].split(',')[0]))}`:''}).filter(Boolean).join(' · ');
+const cxD=DAYS.filter(d=>d.pc==='cx').map(d=>d.name),ecD=DAYS.filter(d=>d.pc==='ec');
+const mktNote=(cxD.length?`US markets are closed ${joinList(cxD)}. `:'')+ecD.map(d=>`${d.name}’s session is a shortened one (${locT(d.pill,d.iso).replace(/^Early close /,'ends ')}).`).join(' ');
+const brief=S.brief?`<div class="note" style="max-width:760px;text-align:left;margin-top:28px"><span class="l">The week at a glance</span><div style="line-height:1.65">Boss, the week holds <b>${cnt('earnings')} earnings items</b>, <b>${cnt('data')} data releases</b>, <b>${cnt('speech')} speeches and central-bank items</b>, <b>${cnt('market')} market items</b>, <b>${cnt('spec')} talking points</b> and <b>${cnt('geo')} geopolitical threads</b>. The market-moving moments are ${keyList}. ${mktNote}<br><br>Latest headlines: ${NEWS.slice(0,3).map(n=>locT(n[3])).join(' · ')}.</div></div>`:'';
+return `${S.prefs.welcomed?'':welcomeCard()}
+<div class="c hero">
+<div class="kclock" role="timer" aria-label="Current time"><div class="kl"><i></i>${tzCity()} time · ${fmtOff()}<i></i></div>
+<div class="kt"><div class="kd"><b data-tick="ch">${hh(h)}</b><span>HRS</span></div><em class="kc">:</em><div class="kd"><b data-tick="cm">${pad(ktime().m)}</b><span data-tick="cap">${S.prefs.h24?'MIN':'MIN · '+(h<12?'AM':'PM')}</span></div></div>
+<div class="kdate" data-tick="cdate">${kdate()}</div></div>
+${sceneHTML(k)}
+<h1>${greet}</h1>
+<p data-tick="hl1" style="margin:30px 0 0;max-width:760px;font:400 21px/1.55 Inter,sans-serif;color:var(--t2)">${homeLines()[0]}</p>
+<p data-tick="hl2" style="margin:12px 0 34px;max-width:680px;font:400 16px/1.55 Inter,sans-serif;color:var(--mu)">${homeLines()[1]}</p>
+<button class="chip go" style="min-height:60px;padding:0 42px;font-size:18px;font-weight:600" data-act="brief">${S.brief?'Hide the briefing':'Brief me on the week ahead'}</button>
+<span class="m" style="margin-top:14px;font-size:14px">I shall summarise the week’s events and headlines for you.</span>
+${brief}
+</div>
+${quoteBlock(false,false)}
+<div class="center" style="display:flex;flex-direction:column;align-items:center;gap:18px;margin-top:8px">
+<div><h2 style="font-size:52px;font-weight:600;line-height:1.1">The week ahead</h2><div class="m" style="margin-top:10px;font-size:15px">${WEEK.label} · All times in your time, ${tzCity()} (${fmtOff()}) · Updated ${locT(WEEK.asOf)}</div></div>
+<div role="group" aria-label="Filter the week ahead by category" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><button class="chip ${f==='all'?'sel':''}" aria-pressed="${f==='all'}" data-act="filter" data-v="all">All <i>${ALL.length}</i></button>${Object.keys(CAT).map(c=>chip(c,CAT[c],cnt(c))).join('')}<button class="chip ${key?'sel':''}" aria-pressed="${key}" data-act="keyonly">★ Key only</button></div>
+<div class="m" aria-live="polite">${summary}</div>
+</div>
+<div class="days">${cards}</div>
+${wkCard}
+<div class="flex">
+<div class="c" style="flex:1.5 1 560px"><div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:6px"><div class="l">Headlines · TV, wires, social</div><div role="group" aria-label="Filter headlines by source type" style="display:flex;gap:8px;flex-wrap:wrap">${nch('all','All sources')}${nch('tv','TV')}${nch('social','Social')}${nch('web','Web')}</div></div>
+<div class="m" style="margin-bottom:6px">Updated ${locT(NEWS_ASOF)}</div>
+${newsH}</div>
+<div style="flex:1 1 340px;display:flex;flex-direction:column;gap:16px">
+<div class="note"><span class="l">Assistant’s note</span><div style="line-height:1.6">${NEWS_NOTE} ★ marks the events most likely to move markets. I refresh the week every Sunday and the headlines every day.</div></div>
+<div class="c srcs"><div class="l" style="margin-bottom:8px">Sources for this week</div>${WEEK.sources.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener noreferrer">${x[0]}</a>`).join('')}</div>
+</div></div>`}
+
+function news(){return `
+<div class="c" style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;padding:26px 32px">
+<div><h1 style="font-weight:500;font-size:40px;line-height:1.1">The papers, boss.</h1><div style="margin-top:8px;color:var(--t2)">I have gathered the stories worth your attention. Three touch your watchlist.</div></div>
+<div class="m">Updated 8:00 AM · Sunday, November 22</div></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="chip sel">All stories</button><button class="chip">Markets</button><button class="chip">Economy</button><button class="chip">Earnings</button><button class="chip">Your watchlist</button><button class="chip">Saved</button></div>
+<div class="flex">
+<div style="flex:2 1 620px;display:flex;flex-direction:column;gap:16px">
+<div class="c" style="padding:32px"><span class="tg t-earnings" style="margin-bottom:12px">Top story · Markets</span>
+<h2 style="font-weight:600;font-size:44px;line-height:1.1;max-width:680px">[Featured headline placeholder: the story of the week ahead]</h2>
+<p style="margin:14px 0 18px;font-size:16px;line-height:1.6;color:var(--t2);max-width:640px">[Two-line summary placeholder. A concise overview of the lead story appears here, written for a reader who has little time.]</p>
+<div class="note" style="max-width:640px"><span class="l">Assistant's note</span>Boss, this may bear on your holdings. [Placeholder: one sentence on why it matters to this client.]</div>
+<div style="display:flex;align-items:center;gap:16px;margin-top:20px;flex-wrap:wrap"><button class="chip go">Read the full story</button><button class="chip">Save</button><span class="m">Source Name · 1h ago</span></div></div>
+<div class="c" style="padding:8px 28px">
+${[['Economy','central bank outlook','the development and its likely effect on markets','2h','3'],['Earnings','earnings week preview','what analysts are watching in the coming sessions','4h','4'],['Markets','yields ahead of the holiday','moves in bonds and the dollar','6h','2'],['Watchlist','a company you follow','news on a stock in the client\'s watchlist','9h','3']].map((s,i)=>`<div style="padding:22px 0;${i?'border-top:1px solid var(--bd)':''}"><span class="tg t-earnings" style="margin-bottom:10px">${s[0]}</span><h3 style="margin:0;font:600 25px/1.2 Cormorant Garamond,serif;color:var(--ts)">[Headline placeholder: ${s[1]}]</h3><p style="margin:8px 0 10px;font-size:14px;line-height:1.55;color:var(--t2);max-width:640px">[One-line summary placeholder describing ${s[2]}.]</p><span class="m">Source Name · ${s[3]} ago · ${s[4]} min read</span></div>`).join('')}
+</div></div>
+<div style="flex:1 1 340px;display:flex;flex-direction:column;gap:16px">
+<div class="c"><div class="l" style="margin-bottom:12px">The assistant's digest</div>
+${['the single most important takeaway for the week.','a risk worth watching on your holdings.','an opportunity worth a closer look.'].map((t,i)=>`<div style="display:flex;gap:14px;padding:13px 0;border-top:1px solid var(--bd);color:var(--t2)"><b style="font:600 20px/1 Cormorant Garamond,serif;color:var(--ac)">${i+1}</b><span>[Placeholder: ${t}]</span></div>`).join('')}</div>
+<div class="c"><div class="l" style="margin-bottom:12px">Watchlist</div>
+<div class="row"><span>[TICKER]</span><span class="pos">▲ 0.00%</span></div><div class="row"><span>[TICKER]</span><span class="neg">▼ 0.00%</span></div><div class="row"><span>[TICKER]</span><span class="pos">▲ 0.00%</span></div><div class="row"><span>[TICKER]</span><span class="neg">▼ 0.00%</span></div></div>
+<div class="c"><div class="l" style="margin-bottom:12px">This week</div>
+<div class="row"><span>Mon · Markets reopen</span><span style="color:var(--ac)">9:30 AM ET</span></div><div class="row"><span>Thu · Thanksgiving</span><span class="neg">Closed</span></div><div class="row"><span>Fri · Early close</span><span style="color:var(--ac)">1:00 PM ET</span></div></div>
+</div></div>`}
+
+/* ---------- calculator ---------- */
+const TIERS=['Cautious','Steady','Bold','Breakout'];
+function inputField(id,label,cls){return `<label><span class="l">${label}</span><input class="in ${cls||''}" id="${id}" type="text" inputmode="decimal" autocomplete="off"></label>`}
+function calc(prev){
+const sd=S.side;
+const rows=[['x','Exit prices',i=>`Target ${i} exit price ($)`],['p','Profit or loss in digits, from your capital',i=>`Desired profit ${i} (digits, $)`],['g','Profit or loss in percentages, from your capital',i=>`Desired profit ${i} (percentage, %)`]];
+const scen=rows.map(([r,t,lab])=>`<div class="l" style="margin:24px 0 14px">${t}</div><div class="fld">${[1,2,3,4].map(i=>inputField(r+i,lab(i))).join('')}</div>`).join('');
+return `
+<div class="c cal">
+<div class="glyph" role="img" aria-label="Profit, measured against time">利θ</div>
+<h1 style="font-weight:500;font-size:56px;line-height:1.1">Allow me to run the numbers, boss.</h1>
+<div style="font-size:17px;line-height:1.5;color:var(--t2);max-width:600px">Choose long or short, enter your trade, then fill in any box of a scenario. An exit price on the wrong side of your entry shows as a loss.</div>
+<div class="m" style="max-width:600px;font-size:13px"><b style="color:var(--ac)">利</b> (lì) means profit, gain or advantage, and <b style="color:var(--ac)">θ</b> is the options Greek for time decay, the cost of waiting. Together: profit, measured against time.</div>
+</div>
+<div role="group" aria-label="Trade direction" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><button class="chip long ${sd==='long'?'sel':''}" style="min-width:130px" aria-pressed="${sd==='long'}" data-act="side" data-v="long">LONG</button><button class="chip short ${sd==='short'?'sel':''}" style="min-width:130px" aria-pressed="${sd==='short'}" data-act="side" data-v="short">SHORT</button></div>
+<div class="flex" style="align-items:stretch">
+<div class="c" style="flex:1.3 1 420px"><div class="l" style="margin-bottom:20px">Trade inputs</div>
+<div class="fld">${inputField('dep','Account deposit ($)')}${inputField('lev','Leverage (x)')}${inputField('entry','Entry price ($)')}${inputField('mm','Maintenance margin rate (%)')}</div>
+<div class="m" style="margin-top:18px;line-height:1.5">Sample: a $1,000 deposit at 5x leverage, buying at $100. The entry price is where you open the trade.</div><div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="chip" data-act="reset">Reset to sample</button><button class="chip" data-act="cnull">Nullify</button></div></div>
+<div class="c" style="flex:1 1 340px"><div class="l" data-b="side"></div>
+<div class="row"><span>Profit per $1 price move</span><b data-b="per"></b></div>
+<div class="row"><span>Approx. liquidation price</span><b class="neg" data-b="liq"></b></div>
+<div class="row"><span>Distance to liquidation</span><b data-b="drop"></b></div></div>
+</div>
+<div class="c"><div class="l" style="margin-bottom:8px">Scenario</div><div class="m" style="line-height:1.5;max-width:760px" data-b="hint"></div>${scen}</div>
+<div class="c"><div class="l" style="margin-bottom:14px">Profits and losses at your targets</div><div style="overflow-x:auto"><div class="sr sh"><span>Target</span><span>Exit price</span><span>Price move</span><span>Profit / loss ($)</span><span>Return (%)</span></div><div id="tbl"></div></div><div class="m" style="margin-top:14px;font-size:12px">Return is profit or loss as a percentage of your account deposit.</div></div>
+<div class="m center" style="font-size:12px">Fees and funding rates are not included, and the liquidation price is approximate. · <a href="#${prev?'calculator':'calculator-previous'}" style="text-decoration:underline">${prev?'Back to the current calculator':'See the earlier version'}</a></div>`}
+
+const num=v=>parseFloat(String(v).replace(/[,$%\s]/g,''));
+const ok=isFinite;
+const fm=x=>Math.abs(x).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const usd=x=>ok(x)?(x<0?'−':'')+'$'+fm(x):'—';
+function calcPaint(prev,skipId){
+const L=S.side==='long',sd=S.side,store=S.sc[sd];
+const dep=num(S.cur.dep),lev=num(S.cur.lev),en=num(S.cur.entry),mm=num(S.cur.mm)/100;
+const pv=dep*lev,q=pv/en,liq=L?en*(1-1/lev+mm):en*(1+1/lev-mm);
+const bind=(k,v)=>{const e=document.querySelector(`[data-b="${k}"]`);if(e)e.textContent=v};
+bind('side',(L?'Long':'Short')+' position');bind('pv',usd(pv));bind('qty',ok(q)?q.toFixed(4):'—');bind('per',usd(q));bind('liq',usd(liq));bind('drop',ok(liq)?(Math.abs(en-liq)/en*100).toFixed(2)+'%':'—');
+bind('hint',(L?'Long: an exit price above your entry price is a profit, and below it is a loss. ':'Short: an exit price below your entry price is a profit, and above it is a loss. ')+'Type into any box in a column and the other two follow. Use a minus sign for a loss in the profit boxes.');
+let tbl='';
+[1,2,3,4].forEach(i=>{
+const st=store[i]||{src:'x',val:SAMPLE[sd][i-1]};
+const sv=num(st.val);let x,pf,gr;
+if(st.src==='x'){x=sv;pf=L?q*(x-en):q*(en-x);gr=pf/dep}
+else{pf=st.src==='p'?sv:(sv/100)*dep;gr=pf/dep;x=L?en+pf/q:en-pf/q}
+const good=ok(x)&&ok(pf)&&ok(gr)&&x>0;
+const f={x:good?x.toFixed(2):'',p:good?pf.toFixed(2):'',g:good?(gr*100).toFixed(2):''};
+['x','p','g'].forEach(r=>{const el=document.getElementById(r+i);if(!el)return;
+if(st.src===r){if(skipId!==r+i)el.value=st.val;el.classList.toggle('bad',!good&&String(st.val).trim()!=='')}
+else{el.value=f[r];el.classList.remove('bad')}});
+const sg=good?(x-en)/en:NaN;
+const gn=good&&pf<0,cl=gn?'neg':'pos',sgn=gn?'−':'+',liqd=good&&gr<=-1;
+tbl+=good?`<div class="sr"><span>Target ${i}${liqd?' <small class="neg">· liquidated</small>':''}</span><span>${usd(x)}</span><span>${sg>0?'+':sg<0?'−':''}${(Math.abs(sg)*100).toFixed(2)}%</span><b class="${cl}">${sgn}$${fm(pf)}</b><b class="${cl}">${sgn}${(Math.abs(gr)*100).toFixed(2)}%</b></div>`:`<div class="sr"><span>Target ${i}</span><span>—</span><span>—</span><span>—</span><span>—</span></div>`;
+});
+const t=document.getElementById('tbl');if(t)t.innerHTML=tbl;
+}
+function calcInit(prev){
+['dep','lev','entry','mm'].forEach(k=>{const el=document.getElementById(k);el.value=S.cur[k];el.addEventListener('input',e=>{S.cur[k]=e.target.value;calcPaint(prev,k)})});
+[1,2,3,4].forEach(i=>['x','p','g'].forEach(r=>{const el=document.getElementById(r+i);el.addEventListener('input',e=>{S.sc[S.side][i]={src:r,val:e.target.value};calcPaint(prev,r+i)})}));
+calcPaint(prev);
+}
+
+/* ---------- market hours ---------- */
+const HOL=['2026-11-26','2026-12-25','2027-01-01','2027-01-18','2027-02-15','2027-03-26','2027-05-31'];
+const EARLY={'2026-11-27':13,'2026-12-24':13};
+function nyOff(ts){const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hourCycle:'h23',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric'}).formatToParts(ts).map(x=>[x.type,x.value]));return(Date.UTC(+p.year,p.month-1,+p.day,+p.hour,+p.minute)-ts)/60000}
+function nyTs(y,m,d,h,mi){const wall=Date.UTC(y,m,d,h,mi);return wall-nyOff(wall+5*3600000)*60000}
+function nyDate(ts){const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(ts).map(x=>[x.type,x.value]));return[+p.year,+p.month-1,+p.day]}
+const iso=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;
+function mktStatus(){
+const now=Date.now(),[y,m,d]=nyDate(now);
+for(let k=0;k<14;k++){const dt=new Date(Date.UTC(y,m,d+k)),yy=dt.getUTCFullYear(),mo=dt.getUTCMonth(),dd=dt.getUTCDate(),wd=dt.getUTCDay(),key=iso(yy,mo,dd);
+if(wd===0||wd===6||HOL.includes(key))continue;
+const early=!!EARLY[key],openTs=nyTs(yy,mo,dd,9,30),closeTs=nyTs(yy,mo,dd,EARLY[key]||16,0);
+const info={early,openTs,closeTs,startTs:nyTs(yy,mo,dd,4,0),endTs:nyTs(yy,mo,dd,early?17:20,0)};
+if(now>=openTs&&now<closeTs)return{open:true,at:closeTs,...info};
+if(now<openTs)return{open:false,at:openTs,...info}}
+return{open:false,at:now,early:false,openTs:0,closeTs:0,startTs:0,endTs:1}}
+const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const etT=ts=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'}).format(ts).replace(/\s/g,' ');
+const etWd=ts=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'long'}).format(ts);
+const kuT=ts=>{const h=S.prefs.h24;return new Intl.DateTimeFormat(h?'en-GB':'en-US',{timeZone:S.prefs.tz,hour:h?'2-digit':'numeric',minute:'2-digit',hourCycle:h?'h23':'h12'}).format(ts).replace(/\s/g,' ')};
+const dayKey=(tz,ts)=>new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(ts);
+const kuNext=ts=>Math.round((Date.parse(dayKey(S.prefs.tz,ts))-Date.parse(dayKey('America/New_York',ts)))/86400000);
+const kuS=ts=>{const d=kuNext(ts);return kuT(ts)+(d?`<sup>${d>0?'+':'−'}${Math.abs(d)}</sup>`:'')};
+function locT(txt,iso){
+if(txt==null||txt==='')return txt;
+const base=iso||(WEEK.days[0]&&WEEK.days[0].iso)||'2026-01-05',[y,m,d]=base.split('-').map(Number);
+const one=(t,mer)=>{const mm=/^(\d{1,2})(?::(\d{2}))?$/.exec(t);if(!mm)return null;let h=+mm[1]%12;if(mer==='PM')h+=12;return nyTs(y,m-1,d,h,+(mm[2]||0))};
+txt=String(txt).replace(/^Before open$/,'Before US open').replace(/^After close$/,'After US close');
+return String(txt).replace(/(\d{1,2}(?::\d{2})?)(?:\s*(AM|PM))?\s*[–-]\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)(?:\s*ET)?|(\d{1,2}(?::\d{2})?)\s*(AM|PM)(?:\s*ET)?/g,(all,a,am,b,bm,c,cm)=>{
+if(c){const t=one(c,cm);return t==null?all:kuS(t)}
+const t1=one(a,am||bm),t2=one(b,bm);return t1==null||t2==null?all:kuS(t1)+'–'+kuS(t2)})}
+const dual=ts=>`${etT(ts)} ET · ${kuS(ts)} ${tzCode()}`;
+const tzCity=(tz=S.prefs.tz)=>tz==='Asia/Baghdad'?'Kurdistan':tz.split('/').pop().replace(/_/g,' ');
+const tzCode=()=>S.prefs.tz==='Asia/Baghdad'?'KRD':tzCity();
+const fmtOff=(tz=S.prefs.tz)=>{const m=tzOffMin(tz,Date.now()),a=Math.abs(m);return 'UTC'+(m<0?'−':'+')+Math.floor(a/60)+(a%60?':'+pad(a%60):'')};
+const hms=ms=>{const s=Math.max(0,Math.floor(ms/1000));return pad(Math.floor(s/3600))+':'+pad(Math.floor(s%3600/60))+':'+pad(s%60)};
+const zones=()=>[[S.prefs.tz,tzCity(),'You',true],['America/New_York','New York','NYSE · Nasdaq'],['Europe/London','London','Europe'],['Asia/Tokyo','Tokyo','Asia']];
+function tzWall(tz,ts){const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',weekday:'short',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'numeric',second:'numeric'}).formatToParts(ts).map(x=>[x.type,x.value]));return p}
+function tzOffMin(tz,ts){const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric'}).formatToParts(ts).map(x=>[x.type,x.value]));return(Date.UTC(+p.year,p.month-1,+p.day,+p.hour,+p.minute)-Math.floor(ts/60000)*60000)/60000}
+const period=h=>h>=5&&h<12?'Morning':h>=12&&h<17?'Afternoon':h>=17&&h<21?'Evening':'Night';
+function clockTile([tz,city,tag,home]){
+const ticks=Array.from({length:12},(_,i)=>`<line x1="50" y1="7" x2="50" y2="${i%3?11:15}" transform="rotate(${i*30} 50 50)" style="stroke:${i%3?'var(--mu)':'var(--ts)'};stroke-width:${i%3?1.5:2.5};stroke-linecap:round"/>`).join('');
+return `<div class="wc ${home?'home':''}" data-tz="${tz}">
+<div class="wtop"><span class="l">${tag}</span>${home?'<span class="pill ec">Home</span>':''}</div>
+<svg viewBox="0 0 100 100" width="132" height="132" role="img" aria-label="${city} analog clock"><circle cx="50" cy="50" r="47" style="fill:var(--bg);stroke:${home?'var(--ac)':'var(--bd)'};stroke-width:2"/>${ticks}
+<line class="hh" x1="50" y1="50" x2="50" y2="29" style="stroke:var(--ts);stroke-width:4;stroke-linecap:round"/>
+<line class="mm" x1="50" y1="50" x2="50" y2="17" style="stroke:var(--ts);stroke-width:2.6;stroke-linecap:round"/>
+<line class="ss" x1="50" y1="58" x2="50" y2="13" style="stroke:var(--ac);stroke-width:1.4;stroke-linecap:round"/><circle cx="50" cy="50" r="3.2" style="fill:var(--ac)"/></svg>
+<div class="wcn">${city}</div>
+<div class="wct" data-z="t">--:--:--</div>
+<div class="m" data-z="d"></div>
+<div class="wp"><i class="pd" data-z="dot"></i><span data-z="p"></span><span class="m" data-z="o"></span></div></div>`}
+function market(){
+const s=mktStatus(),now=Date.now();
+const pre=5.5,reg=(s.closeTs-s.openTs)/3600000,aft=(s.endTs-s.closeTs)/3600000,tot=pre+reg+aft;
+const p1=pre/tot*100,p2=(pre+reg)/tot*100;
+const tk=(left,ts,tr,al,cl)=>`<span class="tk ${cl||''}" style="left:${left}%;transform:translateX(${tr});text-align:${al}"><b>${etT(ts)} ET</b><br>${kuS(ts)} ${tzCode()}</span>`;
+const sessDay=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'long',month:'long',day:'numeric'}).format(s.openTs);
+const closures=[[2026,10,26,'Thanksgiving Day',0],[2026,10,27,'Day after Thanksgiving',13],[2026,11,24,'Christmas Eve',13],[2026,11,25,'Christmas Day',0],[2027,0,1,"New Year's Day",0],[2027,0,18,'Martin Luther King Jr. Day',0],[2027,1,15,"Presidents' Day",0]].filter(c=>nyTs(c[0],c[1],c[2],23,59)>now).slice(0,6);
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const clos=closures.map(([y,m,d,n,eh])=>{const wd=WD[new Date(Date.UTC(y,m,d)).getUTCDay()];const sub=eh?`${wd} · closes ${dual(nyTs(y,m,d,eh,0))}`:`${wd}${y>new Date().getFullYear()?', '+y:''}`;
+return `<div class="cl"><div class="dt"><i>${MON[m]}</i><b>${pad(d)}</b></div><div class="nm">${n}<span>${sub}</span></div><span class="pill ${eh?'ec':'cx'}">${eh?'Early close':'Closed'}</span></div>`}).join('');
+const rg=(a,b,hl)=>`<div class="row" style="align-items:flex-start"><span>${hl[0]}</span><span class="rt"><b style="${hl[1]?'color:var(--ac)':''}">${etT(a)} – ${etT(b)} ET</b><small>${kuS(a)} – ${kuS(b)} ${tzCode()}</small></span></div>`;
+return `<div id="mk" data-sess="${s.openTs}" data-start="${s.startTs}" data-end="${s.endTs}" style="display:flex;flex-direction:column;gap:24px">
+<div class="c mhero">
+<div style="flex:1 1 420px"><div class="l" style="margin-bottom:14px">US equity market · NYSE and Nasdaq</div>
+<h1 style="font-weight:500;font-size:44px;line-height:1.1" data-tick="mh"></h1>
+<div style="margin-top:12px;color:var(--t2);line-height:1.6;max-width:520px" data-tick="msub"></div></div>
+<div class="cdw"><div class="l" data-tick="mlabel"></div>
+<div class="cd" data-tick="mcount" aria-live="off">--:--:--</div>
+<div class="cdu"><span>HRS</span><span>MIN</span><span>SEC</span></div>
+<div class="m" style="margin-top:12px;color:var(--t2)" data-tick="mtarget"></div>
+<div class="m" data-tick="mdays" style="min-height:20px"></div>
+<div class="bar"><i data-tick="mbar"></i></div>
+<span class="pill" data-tick="mpill" style="margin-top:14px"></span></div></div>
+<div class="c"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:20px"><div class="l">${sessDay} · Trading day${s.early?' · Early close':''}</div><div class="l">ET = US Eastern · ${tzCode()} = ${tzCity()===tzCode()?'your time':tzCity()}, ${fmtOff()}</div></div>
+<div style="position:relative"><div style="display:flex;gap:4px"><div class="sg" style="flex:${pre};background:var(--rs);color:var(--t2)">Pre-market</div><div class="sg" style="flex:${reg};background:var(--ac);color:var(--on);font-weight:600">Regular session</div><div class="sg" style="flex:${aft};background:var(--rs);color:var(--t2)">After-hours</div></div><div class="nowm" data-tick="nowm"></div></div>
+<div style="position:relative;height:44px;margin-top:12px">${tk(0,s.startTs,'0','left','edge')}${tk(p1,s.openTs,'-50%','center','hl')}${tk(p2,s.closeTs,'-50%','center','hl')}${tk(100,s.endTs,'-100%','right','edge')}</div></div>
+<div class="c"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:18px"><div><div class="l">World clocks</div></div><div class="m">Live · offsets are from your time</div></div>
+<div class="wgrid">${zones().map(clockTile).join('')}</div></div>
+<div class="flex">
+<div class="c" style="flex:1.4 1 520px;padding-bottom:12px"><div class="l" style="margin-bottom:16px">Upcoming closures</div>${clos}</div>
+<div style="flex:1 1 380px;display:flex;flex-direction:column;gap:16px">
+<div class="c"><div class="l" style="margin-bottom:12px">Session hours</div>${rg(s.startTs,s.openTs,['Pre-market'])}${rg(s.openTs,s.closeTs,['Regular session',1])}${rg(s.closeTs,s.endTs,['After-hours'])}<div class="m" style="margin-top:6px">Shown for ${sessDay}. Extended hours vary by trading venue.</div></div>
+<div class="note"><span class="l">Assistant's note</span><div style="line-height:1.55">Boss, ${(()=>{const d=(tzOffMin(S.prefs.tz,now)-tzOffMin('America/New_York',now))/60;return d===0?'your clock matches New York right now':`your clock is ${Math.abs(d)} hour${Math.abs(d)===1?'':'s'} ${d>0?'ahead of':'behind'} New York right now`})()}. That gap changes when the US switches daylight saving time, and these times adjust on their own.</div></div>
+</div></div></div>`}
+function mktTick(){
+const root=document.getElementById('mk');if(!root)return;
+const now=Date.now(),s=mktStatus();
+if(String(s.openTs)!==root.dataset.sess){render();return}
+const T=(k,v,h)=>{const e=document.querySelector(`[data-tick="${k}"]`);if(e){v=withName(v);if(h)e.innerHTML=v;else e.textContent=v}};
+T('mh',s.open?'The exchanges are open, boss.':'The exchanges are resting, boss.');
+T('msub',s.open?`The regular session runs ${dual(s.openTs)} to ${dual(s.closeTs)}.${s.early?' Today is an early close.':''}`:`The next session opens ${etWd(s.openTs)}, ${dual(s.openTs)}.${s.early?' That day is an early close.':''}`,true);
+T('mlabel',s.open?'Closes in':'Opens in');
+const left=s.at-now;T('mcount',hms(left));
+const dsec=Math.floor(left/1000);T('mdays',dsec>=86400?`That is ${Math.floor(dsec/86400)} day${dsec>=172800?'s':''} and ${Math.floor(dsec%86400/3600)} hours`:'');
+T('mtarget',`${s.open?'Closes':'Opens'} ${etWd(s.at)} · ${dual(s.at)}`,true);
+const pl=document.querySelector('[data-tick="mpill"]');if(pl){pl.textContent=s.open?'Markets open':'Markets closed';pl.className='pill '+(s.open?'':'cx')}
+const bar=document.querySelector('[data-tick="mbar"]');if(bar)bar.style.width=(s.open?Math.min(100,(now-s.openTs)/(s.closeTs-s.openTs)*100):0)+'%';
+const st=+root.dataset.start,en=+root.dataset.end,nm=document.querySelector('[data-tick="nowm"]');
+if(nm){const f=(now-st)/(en-st);nm.style.display=f>=0&&f<=1?'block':'none';nm.style.left=f*100+'%'}
+document.querySelectorAll('.wc').forEach(el=>{
+const tz=el.dataset.tz,p=tzWall(tz,now),h=+p.hour%24,m=+p.minute,sec=+p.second;
+const q=k=>el.querySelector(`[data-z="${k}"]`);
+q('t').textContent=S.prefs.h24?`${pad(h)}:${pad(m)}:${pad(sec)}`:`${h%12||12}:${pad(m)}:${pad(sec)} ${h<12?'AM':'PM'}`;q('d').textContent=`${p.weekday} ${p.day} ${p.month}`;
+q('p').textContent=period(h);q('dot').style.background=(h>=6&&h<18)?'var(--o2)':'var(--lb)';
+const off=(tzOffMin(tz,now)-tzOffMin(S.prefs.tz,now))/60;
+q('o').textContent=off===0?' · Your time':` · ${off>0?'+':'−'}${Math.abs(off)}h from you`;
+el.querySelector('.hh').setAttribute('transform',`rotate(${(h%12+m/60)*30} 50 50)`);
+el.querySelector('.mm').setAttribute('transform',`rotate(${(m+sec/60)*6} 50 50)`);
+el.querySelector('.ss').setAttribute('transform',`rotate(${sec*6} 50 50)`)});
+}
+
+/* ---------- quant sizing ---------- */
+const liqP=(en,lev,mm,L)=>{if(!(isFinite(en)&&isFinite(lev)&&isFinite(mm))||en<=0||lev<=0)return NaN;const x=L?en*(1-1/lev+mm):en*(1+1/lev-mm);return x>0?x:NaN};
+const Q0=()=>({bal:'1000',loss:'20',risk:'2',pct:'2',entry:'100000',stop:'98000',srcA:'risk',srcB:'stop',posO:null,side:'long',mm:'0.5',zero:false});
+S.q=Q0();
+const fr=(a,b)=>`<span class="fr"><span>${a}</span><span>${b}</span></span>`;
+const dnum=(x,n=2)=>isFinite(x)?String(parseFloat(x.toFixed(n))):'';
+const lvx=x=>isFinite(x)?parseFloat(x.toFixed(2))+'x':'—';
+function sizing(){
+const q=S.q,L=q.side==='long';
+const note=(t)=>`<div class="m" style="line-height:1.55;margin-top:14px">${t}</div>`;
+return `
+<div class="c cal" style="padding-bottom:32px">
+<h1 class="glow" style="font-weight:500;font-size:56px;line-height:1.1">Quant Sizing</h1>
+<div style="font-size:17px;line-height:1.5;color:var(--t2);max-width:640px">Decide what you can afford to lose, boss, and I shall work out the position size and the leverage to match.</div>
+</div>
+${quoteBlock(true,true)}
+<div class="flex" style="align-items:stretch">
+<div class="c" style="flex:1 1 360px"><div class="l" style="margin-bottom:18px">Your account</div>
+<div class="fld">${inputField('qbal','Account balance ($)')}${inputField('qmm','Maintenance margin rate (%)')}</div>
+<div class="l" style="margin:22px 0 12px">Trade direction</div>
+<div role="group" aria-label="Trade direction" style="display:flex;gap:12px;flex-wrap:wrap"><button class="chip long ${L?'sel':''}" style="min-width:120px" aria-pressed="${L}" data-act="qside" data-v="long">LONG</button><button class="chip short ${!L?'sel':''}" style="min-width:120px" aria-pressed="${!L}" data-act="qside" data-v="short">SHORT</button></div>
+<div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap"><button class="chip" data-act="qreset">Reset to example</button><button class="chip" data-act="qnull">Nullify</button></div></div>
+<div class="c" style="flex:1.4 1 460px;display:flex;flex-direction:column;justify-content:center"><div class="l" style="margin-bottom:14px">At a glance</div>
+<div class="row" style="border-top:0"><span>Max dollar loss</span><b data-q="s1"></b></div>
+<div class="row"><span>Stop distance</span><b data-q="s2"></b></div>
+<div class="row"><span>Position size</span><b style="color:var(--ac)" data-q="s3"></b></div>
+<div class="row"><span>Leverage</span><b style="color:var(--ac)" data-q="s4"></b></div>
+<div class="row"><span>Stop-loss price</span><b data-q="s6"></b></div>
+<div class="row"><span>Liquidation price</span><b class="neg" data-q="s5"></b></div></div>
+</div>
+<div class="flex" style="align-items:stretch">
+<div class="c" style="flex:1 1 440px"><span class="tg t-earnings" style="margin-bottom:12px">Formula 1</span>
+<div class="fm"><span>Position Size ($) =</span>${fr('Max Dollar Loss ($)','Stop Distance (%)')}</div>
+${note('It divides the most you are willing to lose by the percentage distance to your stop-loss. Loss on a position is Position Size × Stop Distance, so this solves for the size that makes the loss exactly your limit.')}
+<div class="l" style="margin:24px 0 14px">Max dollar loss</div>
+<div class="fld">${inputField('qloss','Max dollar loss ($)')}${inputField('qrisk','or risk per trade (% of account)')}</div>
+<div class="l" style="margin:24px 0 14px">Stop distance</div>
+<div class="fld">${inputField('qpct','Stop distance (%)')}${inputField('qentry','Entry price ($)')}${inputField('qstop','Stop-loss price ($)')}</div>
+<div class="m" style="margin-top:12px;min-height:20px" data-q="warn"></div>
+<div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--bd)"><div class="l" style="margin-bottom:12px">Result</div>
+<div class="fm res"><span>Position Size ($) =</span><span data-q="f1n"></span><span>=</span><b data-q="f1r"></b></div></div></div>
+<div class="c" style="flex:1 1 440px"><span class="tg t-earnings" style="margin-bottom:12px">Formula 2</span>
+<div class="fm"><span>Leverage =</span>${fr('Position Size ($)','Account Balance ($)')}</div>
+${note('Once Formula 1 gives the size you need, this divides it by your balance to tell you which leverage multiplier to select on the exchange, so leverage becomes a mechanical result instead of a habit.')}
+<div class="l" style="margin:24px 0 14px">Inputs</div>
+<div class="fld">${inputField('qpos','Position size ($)')}<div style="display:flex;align-items:flex-end"><button class="chip" data-act="quse" style="width:100%">Use Formula 1 result</button></div></div>
+<div class="m" style="margin-top:12px;line-height:1.5">Position size fills in from Formula 1. Type your own number to override it. The account balance comes from the box on the left.</div>
+<div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--bd)"><div class="l" style="margin-bottom:12px">Result</div>
+<div class="fm res"><span>Leverage =</span><span data-q="f2n"></span><span>=</span><b data-q="f2r"></b></div>
+<div class="m" style="margin-top:12px" data-q="f2h"></div></div></div>
+</div>
+<div class="c"><div class="l" style="margin-bottom:8px">Same loss, different stops</div><div class="m" style="max-width:720px;line-height:1.5;margin-bottom:14px">A tighter stop needs a bigger position and more leverage, but your dollar loss stays locked at your limit. A red liquidation price means it sits on the wrong side of your stop, so you would be liquidated before the stop-loss is hit.</div>
+<div style="overflow-x:auto"><div class="sr sr6 sh"><span>Stop distance</span><span>Stop price</span><span>Liquidation price</span><span>Position size</span><span>Leverage</span><span>Loss if stop hit</span></div><div id="qtbl"></div></div></div>
+<div class="m center" style="font-size:12px">For illustration only, not personal investment advice. Fees, funding and slippage are not included.</div>`}
+function qVals(){const q=S.q,bal=num(q.bal),en=num(q.entry),L=q.side==='long';
+let loss,risk;
+if(q.srcA==='loss'){loss=num(q.loss);risk=loss/bal*100}else{risk=num(q.risk);loss=risk/100*bal}
+let pct,stop;
+if(q.srcB==='stop'){stop=num(q.stop);pct=Math.abs(en-stop)/en*100}else{pct=num(q.pct);stop=L?en*(1-pct/100):en*(1+pct/100)}
+return{bal,loss,risk,pct,stop,en,L}}
+function qPaint(skip){
+const q=S.q,v=qVals(),pv=x=>isFinite(x)&&x>0;v.mm=num(q.mm)/100;const Z=!!q.zero;if(Z){v.loss=0;v.risk=0;v.pct=0;v.stop=0;v.bal=0;v.en=0;v.mm=0}
+const pos=Z?0:pv(v.loss)&&pv(v.pct)?v.loss/(v.pct/100):NaN;
+const use=Z?0:q.posO!==null?num(q.posO):pos;
+const lev=Z?0:pv(use)&&pv(v.bal)?use/v.bal:NaN;
+const setV=(id,val,src)=>{const el=document.getElementById(id);if(!el)return;
+if(src){if(skip!==id)el.value=val;const bad=String(val).trim()!==''&&!(isFinite(num(val))&&num(val)>=0);el.classList.toggle('bad',bad)}
+else{el.value=val;el.classList.remove('bad')}};
+setV('qbal',q.bal,true);setV('qmm',q.mm,true);setV('qentry',q.entry,true);
+setV('qloss',q.srcA==='loss'?q.loss:dnum(v.loss),q.srcA==='loss');
+setV('qrisk',q.srcA==='risk'?q.risk:dnum(v.risk),q.srcA==='risk');
+setV('qpct',q.srcB==='pct'?q.pct:dnum(v.pct,4),q.srcB==='pct');
+setV('qstop',q.srcB==='stop'?q.stop:dnum(v.stop),q.srcB==='stop');
+if(q.posO!==null){setV('qpos',q.posO,true)}else if(skip!=='qpos'){setV('qpos',dnum(pos),false)}
+const B=(k,h)=>{const e=document.querySelector(`[data-q="${k}"]`);if(e)e.innerHTML=h};
+B('s1',usd(v.loss));B('s2',Z?'0%':isFinite(v.pct)&&v.pct>0?parseFloat(v.pct.toFixed(4))+'%':'—');B('s3',usd(use));B('s4',lvx(lev));
+const liq=Z?0:liqP(v.en,lev,v.mm,v.L);B('s5',Z?'$0.00':isFinite(liq)?usd(liq):(pv(lev)&&isFinite(v.en)?'None':'—'));B('s6',Z?'$0.00':isFinite(v.stop)&&v.en>0?usd(v.stop):'—');
+let w='';
+if(!Z&&isFinite(v.stop)&&isFinite(v.en)&&v.en>0){if(v.L&&v.stop>=v.en)w='For a long, the stop-loss should sit below your entry price.';else if(!v.L&&v.stop<=v.en)w='For a short, the stop-loss should sit above your entry price.'}
+B('warn',w?`<span class="neg">${w}</span>`:'');
+const p=isFinite(v.pct)?parseFloat((v.pct/100).toFixed(6)):NaN;
+B('f1n',Z?fr('$0.00','0'):pv(pos)?fr(usd(v.loss),p):'');B('f1r',Z||pv(pos)?usd(pos):'—');
+B('f2n',Z||pv(lev)?fr(usd(use),usd(v.bal)):'');B('f2r',Z?'0x':lvx(lev));
+B('f2h',Z?'':pv(lev)?(lev<1?'Below 1x, so no borrowing is needed.':'If your exchange requires it, round the leverage yourself. Rounding down keeps your loss at or under your limit.'):'');
+let t='';
+if(Z||(pv(v.loss)&&pv(v.bal))){[0.5,1,2,5,10].forEach(st=>{const ps=Z?0:v.loss/(st/100),sp=Z?0:isFinite(v.en)&&v.en>0?(v.L?v.en*(1-st/100):v.en*(1+st/100)):NaN;
+const lv=Z?0:ps/v.bal,lq=Z?0:liqP(v.en,lv,v.mm,v.L);
+const early=!Z&&isFinite(lq)&&isFinite(sp)&&(v.L?lq>=sp:lq<=sp);
+const lqT=Z?'$0.00':isFinite(lq)?usd(lq):(isFinite(sp)?'None':'—');
+t+=`<div class="sr sr6"><span>${st}%</span><span>${usd(sp)}</span><span class="${early?'neg':''}"><b>${lqT}</b>${early?'<small class="neg"> · hit first</small>':''}</span><b>${usd(ps)}</b><b style="color:var(--ac)">${lvx(lv)}</b><span class="neg">−${usd(Z?0:v.loss)}</span></div>`})}
+else t='<div class="m" style="padding:12px 0">Enter your balance and a max loss to see the table.</div>';
+const tb=document.getElementById('qtbl');if(tb)tb.innerHTML=t;
+}
+function qInit(){
+const H=(id,fn)=>document.getElementById(id).addEventListener('input',e=>{S.q.zero=false;fn(e.target.value);qPaint(id)});
+H('qbal',v=>S.q.bal=v);H('qmm',v=>S.q.mm=v);H('qentry',v=>S.q.entry=v);
+H('qloss',v=>{S.q.loss=v;S.q.srcA='loss'});H('qrisk',v=>{S.q.risk=v;S.q.srcA='risk'});
+H('qpct',v=>{S.q.pct=v;S.q.srcB='pct'});H('qstop',v=>{S.q.stop=v;S.q.srcB='stop'});
+H('qpos',v=>{S.q.posO=v.trim()===''?null:v});
+qPaint();
+}
+
+
+/* ---------- logo options ---------- */
+const LOGO_INITIAL=document.getElementById('logo').innerHTML;
+const LOGOS={
+initial:{name:'Initial',note:'The stargazer. A stick man on a mountain looks through binoculars at a star. Tap it and he walks to the star.',svg:p=>LOGO_INITIAL.replace(/lgc|lgm|lgs/g,m=>p+m)},
+compass:{name:'Compass Star',note:'A compass rose that always finds north. The needle settles and drifts. Tap it and it spins, then locks on the guiding star.',svg:p=>`<svg viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="${p}c"><circle cx="60" cy="60" r="55"/></clipPath><radialGradient id="${p}b" cx=".5" cy=".4" r=".75"><stop offset="0" style="stop-color:var(--nt)"/><stop offset="1" style="stop-color:var(--bg)"/></radialGradient><linearGradient id="${p}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient></defs><circle cx="60" cy="60" r="56" fill="url(#${p}b)" style="stroke:var(--ac)" stroke-width="1.6"/><g clip-path="url(#${p}c)"><g style="fill:var(--ts)" stroke="none"><circle cx="21" cy="34" r="1.2" opacity=".75"/><circle cx="33" cy="17" r=".95" opacity=".55"/><circle cx="86" cy="15" r="1" opacity=".6"/><circle cx="101" cy="50" r="1.1" opacity=".65"/><circle cx="16" cy="62" r=".9" opacity=".5"/><circle cx="103" cy="31" r=".85" opacity=".5"/></g></g><g class="cs-n"><path d="M76.97 43.03L67.64 60L76.97 76.97L60 67.64L43.03 76.97L52.36 60L43.03 43.03L60 52.36Z" style="fill:var(--ts)" opacity=".28" stroke="none"/><path d="M60 60L60 15L51.6 51.6Z" style="fill:var(--ac)" stroke="none"/><path d="M60 60L60 15L68.4 51.6Z" style="fill:var(--ac)" opacity=".6" stroke="none"/><path d="M60 60L93 60L68.4 51.6Z" style="fill:var(--ts)" opacity=".92" stroke="none"/><path d="M60 60L93 60L68.4 68.4Z" style="fill:var(--ts)" opacity=".55" stroke="none"/><path d="M60 60L60 105L68.4 68.4Z" style="fill:var(--ts)" opacity=".92" stroke="none"/><path d="M60 60L60 105L51.6 68.4Z" style="fill:var(--ts)" opacity=".55" stroke="none"/><path d="M60 60L27 60L51.6 68.4Z" style="fill:var(--ts)" opacity=".92" stroke="none"/><path d="M60 60L27 60L51.6 51.6Z" style="fill:var(--ts)" opacity=".55" stroke="none"/><circle class="cs-tip" cx="60" cy="15" r="2.6" style="fill:var(--gl)" stroke="none"/><circle cx="60" cy="60" r="3.1" style="fill:var(--bg);stroke:var(--ac)" stroke-width="1.3"/></g><circle class="cs-fl" cx="60" cy="60" r="6" style="stroke:var(--gl)" stroke-width="1.4"/></svg>`},
+summit:{name:'Summit Star',note:'One clean ridge line and a single star above the peak. Tap it and the star descends to the summit and lights it up.',svg:p=>`<svg viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="${p}c"><circle cx="60" cy="60" r="55"/></clipPath><radialGradient id="${p}b" cx=".5" cy=".4" r=".75"><stop offset="0" style="stop-color:var(--nt)"/><stop offset="1" style="stop-color:var(--bg)"/></radialGradient><linearGradient id="${p}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient></defs><circle cx="60" cy="60" r="56" fill="url(#${p}b)" style="stroke:var(--ac)" stroke-width="1.6"/><g clip-path="url(#${p}c)"><g style="fill:var(--ts)" stroke="none"><circle cx="21" cy="34" r="1.2" opacity=".75"/><circle cx="33" cy="17" r=".95" opacity=".55"/><circle cx="86" cy="15" r="1" opacity=".6"/><circle cx="101" cy="50" r="1.1" opacity=".65"/><circle cx="16" cy="62" r=".9" opacity=".5"/><circle cx="103" cy="31" r=".85" opacity=".5"/></g><path d="M10 96L40 62L52 75L74 41L110 96V122H10Z" fill="url(#${p}m)" style="stroke:var(--ac)" stroke-width="2.3"/></g><path class="su-bm" d="M74 32V39" style="stroke:var(--gl)" stroke-width="1.5" stroke-dasharray="1.6 3" opacity=".8"/><g class="su-st"><circle cx="74" cy="21" r="11" style="fill:var(--gl)" opacity=".18" stroke="none"/><path d="M74 9.5Q75.38 19.62 85.5 21Q75.38 22.38 74 32.5Q72.62 22.38 62.5 21Q72.62 19.62 74 9.5Z" style="fill:var(--gl)" stroke="none"/></g><circle class="su-bu" cx="74" cy="38" r="3" style="stroke:var(--gl)" stroke-width="1.5"/></svg>`},
+constellation:{name:'Constellation',note:'A stick man under stars that form a rising chart. Tap it and the line draws itself to the brightest star.',svg:p=>`<svg viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="${p}c"><circle cx="60" cy="60" r="55"/></clipPath><radialGradient id="${p}b" cx=".5" cy=".4" r=".75"><stop offset="0" style="stop-color:var(--nt)"/><stop offset="1" style="stop-color:var(--bg)"/></radialGradient><linearGradient id="${p}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient></defs><circle cx="60" cy="60" r="56" fill="url(#${p}b)" style="stroke:var(--ac)" stroke-width="1.6"/><g clip-path="url(#${p}c)"><g style="fill:var(--ts)" stroke="none"><circle cx="21" cy="34" r="1.2" opacity=".75"/><circle cx="33" cy="17" r=".95" opacity=".55"/><circle cx="86" cy="15" r="1" opacity=".6"/><circle cx="101" cy="50" r="1.1" opacity=".65"/><circle cx="16" cy="62" r=".9" opacity=".5"/><circle cx="103" cy="31" r=".85" opacity=".5"/></g><path d="M2 104L24 93L44 99L70 92L118 101V122H2Z" fill="url(#${p}m)" style="stroke:var(--ac)" stroke-width="1.9"/></g><path class="ct-ln" pathLength="100" d="M41 79L55 65L65 72L79 50L96 28" style="stroke:var(--ts)" stroke-width="1.15" opacity=".75"/><g class="ct-s" style="--i:0;--dl:0s;--ox:41px;--oy:79px"><circle cx="41" cy="79" r="5" style="fill:var(--gl)" opacity=".2" stroke="none"/><circle cx="41" cy="79" r="2.3" style="fill:var(--ts)" stroke="none"/></g><g class="ct-s" style="--i:1;--dl:.31s;--ox:55px;--oy:65px"><circle cx="55" cy="65" r="5" style="fill:var(--gl)" opacity=".2" stroke="none"/><circle cx="55" cy="65" r="2.3" style="fill:var(--ts)" stroke="none"/></g><g class="ct-s" style="--i:2;--dl:.61s;--ox:65px;--oy:72px"><circle cx="65" cy="72" r="5" style="fill:var(--gl)" opacity=".2" stroke="none"/><circle cx="65" cy="72" r="2.3" style="fill:var(--ts)" stroke="none"/></g><g class="ct-s" style="--i:3;--dl:1.3s;--ox:79px;--oy:50px"><circle cx="79" cy="50" r="5" style="fill:var(--gl)" opacity=".2" stroke="none"/><circle cx="79" cy="50" r="2.3" style="fill:var(--ts)" stroke="none"/></g><g class="ct-s" style="--i:4;--dl:2s;--ox:96px;--oy:28px"><circle cx="96" cy="28" r="11" style="fill:var(--gl)" opacity=".2" stroke="none"/><path d="M96 16Q97.44 26.56 108 28Q97.44 29.44 96 40Q94.56 29.44 84 28Q94.56 26.56 96 16Z" style="fill:var(--gl)" stroke="none"/></g><circle class="ct-bu" cx="96" cy="28" r="3" style="stroke:var(--gl)" stroke-width="1.5"/><g class="ct-m" style="stroke:var(--ts)" stroke-width="2.3"><path d="M24 74V84M24 84L19.5 94M24 84L28.5 94"/><g class="ct-hd"><circle cx="24" cy="68.5" r="4.1"/><path class="ct-ar" d="M24 76L33 67"/><path class="ct-rc" d="M24 76L15 66M24 76L33 66"/></g></g></svg>`},
+axis:{name:'Axis L',note:'The L of Lodestar as chart axes, with a rising line that ends in a star. Tap it and the line redraws itself to the star.',svg:p=>`<svg viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="${p}c"><circle cx="60" cy="60" r="55"/></clipPath><radialGradient id="${p}b" cx=".5" cy=".4" r=".75"><stop offset="0" style="stop-color:var(--nt)"/><stop offset="1" style="stop-color:var(--bg)"/></radialGradient><linearGradient id="${p}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient></defs><circle cx="60" cy="60" r="56" fill="url(#${p}b)" style="stroke:var(--ac)" stroke-width="1.6"/><g clip-path="url(#${p}c)"><g style="fill:var(--ts)" stroke="none"><circle cx="21" cy="34" r="1.2" opacity=".75"/><circle cx="33" cy="17" r=".95" opacity=".55"/><circle cx="86" cy="15" r="1" opacity=".6"/><circle cx="101" cy="50" r="1.1" opacity=".65"/><circle cx="16" cy="62" r=".9" opacity=".5"/><circle cx="103" cy="31" r=".85" opacity=".5"/></g></g><path d="M37 26V90H92" style="stroke:var(--ts)" stroke-width="3.4"/><path class="ax-ln" pathLength="100" d="M44 83L58 68L66 75L80 50L91 36" style="stroke:var(--ac)" stroke-width="2.7"/><path class="ax-tr" pathLength="100" d="M44 83L58 68L66 75L80 50L91 36" style="stroke:var(--ts)" stroke-width="2.2"/><circle class="ax-bu" cx="92" cy="33" r="3" style="stroke:var(--gl)" stroke-width="1.5"/><g class="ax-st"><circle cx="92" cy="33" r="11" style="fill:var(--gl)" opacity=".2" stroke="none"/><path d="M92 20Q93.56 31.44 105 33Q93.56 34.56 92 46Q90.44 34.56 79 33Q90.44 31.44 92 20Z" style="fill:var(--gl)" stroke="none"/></g></svg>`},
+beacon:{name:'Beacon',note:'A lighthouse whose beam sweeps the sky. Tap it and both beams blaze and the star answers.',svg:p=>`<svg viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="${p}c"><circle cx="60" cy="60" r="55"/></clipPath><radialGradient id="${p}b" cx=".5" cy=".4" r=".75"><stop offset="0" style="stop-color:var(--nt)"/><stop offset="1" style="stop-color:var(--bg)"/></radialGradient><linearGradient id="${p}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient><linearGradient id="${p}l" x1="1" y1="0" x2="0" y2="0"><stop offset="0" style="stop-color:var(--gl)" stop-opacity=".6"/><stop offset="1" style="stop-color:var(--gl)" stop-opacity="0"/></linearGradient><linearGradient id="${p}r" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color:var(--gl)" stop-opacity=".6"/><stop offset="1" style="stop-color:var(--gl)" stop-opacity="0"/></linearGradient></defs><circle cx="60" cy="60" r="56" fill="url(#${p}b)" style="stroke:var(--ac)" stroke-width="1.6"/><g clip-path="url(#${p}c)"><g style="fill:var(--ts)" stroke="none"><circle cx="21" cy="34" r="1.2" opacity=".75"/><circle cx="33" cy="17" r=".95" opacity=".55"/><circle cx="86" cy="15" r="1" opacity=".6"/><circle cx="101" cy="50" r="1.1" opacity=".65"/><circle cx="16" cy="62" r=".9" opacity=".5"/><circle cx="103" cy="31" r=".85" opacity=".5"/></g><path class="be-l" d="M58 44L2 26V62Z" fill="url(#${p}l)" stroke="none"/><path class="be-r" d="M62 44L118 26V62Z" fill="url(#${p}r)" stroke="none"/><path d="M28 108L42 93L52 88H68L78 93L92 108V124H28Z" fill="url(#${p}m)" style="stroke:var(--ac)" stroke-width="1.9"/></g><path d="M53 88L56 50H64L67 88Z" style="fill:var(--ts)" stroke="none"/><path d="M54.3 76H65.7M55.2 63H64.8" style="stroke:var(--ac)" stroke-width="5" stroke-linecap="butt"/><rect x="54" y="46.5" width="12" height="3.5" rx="1" style="fill:var(--ac)" stroke="none"/><rect class="be-lt" x="56" y="39.5" width="8" height="7" style="fill:var(--gl)" stroke="none"/><path d="M54.5 39.5L60 33.5L65.5 39.5Z" style="fill:var(--ac)" stroke="none"/><g class="be-st"><circle cx="95" cy="33" r="9" style="fill:var(--gl)" opacity=".18" stroke="none"/><path d="M95 24Q96.08 31.92 104 33Q96.08 34.08 95 42Q93.92 34.08 86 33Q93.92 31.92 95 24Z" style="fill:var(--gl)" stroke="none"/></g><circle class="be-bu" cx="60" cy="43" r="3" style="stroke:var(--gl)" stroke-width="1.5"/></svg>`},
+crystal:{name:'Crystal',note:'A cut lodestone with a star glint. A shine sweeps across it now and then. Tap it for a bright flash.',svg:p=>`<svg viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="${p}c"><circle cx="60" cy="60" r="55"/></clipPath><radialGradient id="${p}b" cx=".5" cy=".4" r=".75"><stop offset="0" style="stop-color:var(--nt)"/><stop offset="1" style="stop-color:var(--bg)"/></radialGradient><linearGradient id="${p}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient><clipPath id="${p}g"><path d="M40 44H80L92 58L60 98L28 58Z"/></clipPath></defs><circle cx="60" cy="60" r="56" fill="url(#${p}b)" style="stroke:var(--ac)" stroke-width="1.6"/><g clip-path="url(#${p}c)"><g style="fill:var(--ts)" stroke="none"><circle cx="21" cy="34" r="1.2" opacity=".75"/><circle cx="33" cy="17" r=".95" opacity=".55"/><circle cx="86" cy="15" r="1" opacity=".6"/><circle cx="101" cy="50" r="1.1" opacity=".65"/><circle cx="16" cy="62" r=".9" opacity=".5"/><circle cx="103" cy="31" r=".85" opacity=".5"/></g></g><path d="M40 44H60L50 58Z" style="fill:var(--ts)" opacity="0.95" stroke="none"/><path d="M60 44H80L70 58Z" style="fill:var(--ts)" opacity="0.78" stroke="none"/><path d="M40 44L50 58L28 58Z" style="fill:var(--ts)" opacity="0.6" stroke="none"/><path d="M80 44L92 58L70 58Z" style="fill:var(--ts)" opacity="0.5" stroke="none"/><path d="M50 58L60 44L70 58Z" style="fill:var(--ac)" opacity="0.95" stroke="none"/><path d="M28 58H50L60 98Z" style="fill:var(--ts)" opacity="0.42" stroke="none"/><path d="M50 58H70L60 98Z" style="fill:var(--ac)" opacity="0.85" stroke="none"/><path d="M70 58H92L60 98Z" style="fill:var(--ts)" opacity="0.28" stroke="none"/><g clip-path="url(#${p}g)"><rect class="cr-sh" x="-24" y="30" width="13" height="78" fill="#fff" opacity=".75" stroke="none" transform="skewX(-22)"/></g><path d="M40 44H80L92 58L60 98L28 58ZM28 58H92M40 44L50 58L60 98L70 58L80 44" style="stroke:var(--ac)" stroke-width="1.5" opacity=".95"/><g class="cr-st"><circle cx="88" cy="36" r="9" style="fill:var(--gl)" opacity=".2" stroke="none"/><path d="M88 26Q89.2 34.8 98 36Q89.2 37.2 88 46Q86.8 37.2 78 36Q86.8 34.8 88 26Z" style="fill:var(--gl)" stroke="none"/></g><circle class="cr-bu" cx="88" cy="36" r="3" style="stroke:var(--gl)" stroke-width="1.5"/></svg>`},
+candles:{name:'Candles',note:'Four candles climbing, with a star at the top of the last wick. Tap it and they regrow one by one.',svg:p=>`<svg viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="${p}c"><circle cx="60" cy="60" r="55"/></clipPath><radialGradient id="${p}b" cx=".5" cy=".4" r=".75"><stop offset="0" style="stop-color:var(--nt)"/><stop offset="1" style="stop-color:var(--bg)"/></radialGradient><linearGradient id="${p}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient></defs><circle cx="60" cy="60" r="56" fill="url(#${p}b)" style="stroke:var(--ac)" stroke-width="1.6"/><g clip-path="url(#${p}c)"><g style="fill:var(--ts)" stroke="none"><circle cx="21" cy="34" r="1.2" opacity=".75"/><circle cx="33" cy="17" r=".95" opacity=".55"/><circle cx="86" cy="15" r="1" opacity=".6"/><circle cx="101" cy="50" r="1.1" opacity=".65"/><circle cx="16" cy="62" r=".9" opacity=".5"/><circle cx="103" cy="31" r=".85" opacity=".5"/></g></g><path d="M18 92H102" style="stroke:var(--ts)" stroke-width="1.2" opacity=".35"/><g class="cd-c" style="--i:0;--ox:30px;--oy:92px"><path d="M30 64V90" style="stroke:var(--dn)" stroke-width="2"/><rect x="25" y="70" width="10" height="14" rx="1.4" style="fill:var(--dn)" stroke="none"/></g><g class="cd-c" style="--i:1;--ox:50px;--oy:92px"><path d="M50 54V86" style="stroke:var(--up)" stroke-width="2"/><rect x="45" y="60" width="10" height="20" rx="1.4" style="fill:var(--up)" stroke="none"/></g><g class="cd-c" style="--i:2;--ox:70px;--oy:92px"><path d="M70 40V72" style="stroke:var(--up)" stroke-width="2"/><rect x="65" y="46" width="10" height="20" rx="1.4" style="fill:var(--up)" stroke="none"/></g><g class="cd-c" style="--i:3;--ox:90px;--oy:92px"><path d="M90 30V62" style="stroke:var(--up)" stroke-width="2"/><rect x="85" y="34" width="10" height="20" rx="1.4" style="fill:var(--up)" stroke="none"/></g><g class="cd-st"><circle cx="90" cy="19" r="9" style="fill:var(--gl)" opacity=".2" stroke="none"/><path d="M90 9Q91.2 17.8 100 19Q91.2 20.2 90 29Q88.8 20.2 80 19Q88.8 17.8 90 9Z" style="fill:var(--gl)" stroke="none"/></g><circle class="cd-bu" cx="90" cy="19" r="3" style="stroke:var(--gl)" stroke-width="1.5"/></svg>`},
+telescope:{name:'Telescope',note:'A telescope on a tripod, pointed at a star. Tap it and it sweeps the sky, then locks on.',svg:p=>`<svg viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="${p}c"><circle cx="60" cy="60" r="55"/></clipPath><radialGradient id="${p}b" cx=".5" cy=".4" r=".75"><stop offset="0" style="stop-color:var(--nt)"/><stop offset="1" style="stop-color:var(--bg)"/></radialGradient><linearGradient id="${p}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient></defs><circle cx="60" cy="60" r="56" fill="url(#${p}b)" style="stroke:var(--ac)" stroke-width="1.6"/><g clip-path="url(#${p}c)"><g style="fill:var(--ts)" stroke="none"><circle cx="21" cy="34" r="1.2" opacity=".75"/><circle cx="33" cy="17" r=".95" opacity=".55"/><circle cx="86" cy="15" r="1" opacity=".6"/><circle cx="101" cy="50" r="1.1" opacity=".65"/><circle cx="16" cy="62" r=".9" opacity=".5"/><circle cx="103" cy="31" r=".85" opacity=".5"/></g><path d="M0 106Q38 94 78 101T124 99V124H0Z" fill="url(#${p}m)" style="stroke:var(--ac)" stroke-width="1.9"/></g><path d="M50 71L36 101M50 71L60 101M50 71L48 101" style="stroke:var(--ts)" stroke-width="2.3"/><path class="te-bm" d="M82 38L90 29" style="stroke:var(--gl)" stroke-width="1.5" stroke-dasharray="1.6 3" opacity="0"/><g class="te-t"><path d="M47 74L74 47" style="stroke:var(--ac)" stroke-width="9"/><path d="M72 49L78 43" style="stroke:var(--ts)" stroke-width="11"/><path d="M45 76L41.5 79.5" style="stroke:var(--ts)" stroke-width="4"/></g><circle cx="50" cy="71" r="3" style="fill:var(--bg);stroke:var(--ac)" stroke-width="1.4"/><g class="te-st"><circle cx="96" cy="24" r="10" style="fill:var(--gl)" opacity=".18" stroke="none"/><path d="M96 13Q97.32 22.68 107 24Q97.32 25.32 96 35Q94.68 25.32 85 24Q94.68 22.68 96 13Z" style="fill:var(--gl)" stroke="none"/></g><circle class="te-bu" cx="96" cy="24" r="3" style="stroke:var(--gl)" stroke-width="1.5"/></svg>`},
+ascent:{name:'Ascent',note:'Three chevrons rising toward a star. A pulse climbs them. Tap it and they launch upward.',svg:p=>`<svg viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="${p}c"><circle cx="60" cy="60" r="55"/></clipPath><radialGradient id="${p}b" cx=".5" cy=".4" r=".75"><stop offset="0" style="stop-color:var(--nt)"/><stop offset="1" style="stop-color:var(--bg)"/></radialGradient><linearGradient id="${p}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rs)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient></defs><circle cx="60" cy="60" r="56" fill="url(#${p}b)" style="stroke:var(--ac)" stroke-width="1.6"/><g clip-path="url(#${p}c)"><g style="fill:var(--ts)" stroke="none"><circle cx="21" cy="34" r="1.2" opacity=".75"/><circle cx="33" cy="17" r=".95" opacity=".55"/><circle cx="86" cy="15" r="1" opacity=".6"/><circle cx="101" cy="50" r="1.1" opacity=".65"/><circle cx="16" cy="62" r=".9" opacity=".5"/><circle cx="103" cy="31" r=".85" opacity=".5"/></g></g><path class="as-c" style="--i:0;--o:0.38;stroke:var(--ac)" d="M43 97L60 80L77 97" stroke-width="4.2" opacity="0.38"/><path class="as-c" style="--i:1;--o:0.7;stroke:var(--ac)" d="M41 83L60 64L79 83" stroke-width="4.2" opacity="0.7"/><path class="as-c" style="--i:2;--o:1;stroke:var(--ac)" d="M39 69L60 48L81 69" stroke-width="4.2" opacity="1"/><g class="as-st"><circle cx="60" cy="25" r="11" style="fill:var(--gl)" opacity=".2" stroke="none"/><path d="M60 12Q61.56 23.44 73 25Q61.56 26.56 60 38Q58.44 26.56 47 25Q58.44 23.44 60 12Z" style="fill:var(--gl)" stroke="none"/></g><circle class="as-bu" cx="60" cy="25" r="3" style="stroke:var(--gl)" stroke-width="1.5"/></svg>`}
+};
+const LOGO_IDS=Object.keys(LOGOS);
+let logoNow='';
+function setLogo(){const id=LOGOS[S.prefs.logo]?S.prefs.logo:'initial',l=document.getElementById('logo');if(!l||logoNow===id)return;logoNow=id;
+LOGO_IDS.forEach(k=>l.classList.remove('v-'+k));l.classList.add('v-'+id);
+l.innerHTML=id==='initial'?LOGO_INITIAL:LOGOS[id].svg('h')}
+function logosPage(){const cur=LOGOS[S.prefs.logo]?S.prefs.logo:'initial';
+return `<div class="c lgh"><div><h1 style="font-weight:500;font-size:40px;line-height:1.1">Logo options, boss.</h1><div style="margin-top:8px;color:var(--t2)">Hover a logo to see it move. Tap it to play its click animation. Choose one and it replaces the logo at the top left.</div></div></div>
+<div class="lgg">${LOGO_IDS.map(k=>`<div class="lcard ${k===cur?'use':''}"><h3>${LOGOS[k].name}</h3><button class="lbig" data-act="logoplay" data-v="${k}" aria-label="Play the ${LOGOS[k].name} animation"><span class="logo big v-${k}" id="lp-${k}">${k==='initial'?LOGO_INITIAL.replace(/lgc|lgm|lgs/g,m=>'x'+k+m):LOGOS[k].svg('x'+k)}</span></button><div class="m">${LOGOS[k].note}</div>${k===cur?'<button class="chip sel" aria-pressed="true" disabled>In use</button>':`<button class="chip go" data-act="logopick" data-v="${k}">Use this logo</button>`}</div>`).join('')}</div>`}
+/* ---------- router ---------- */
+const NAV=[['home','Home'],['calculator','Calculator'],['market','Market Hours'],['sizing','Quant Sizing']];
+function route(){const r=(location.hash||'#home').slice(1);return r==='model'?'sizing':r}
+function render(){
+const r=route(),page=$('#page');
+$('#nav').innerHTML=NAV.map(([k,l])=>`<a class="tab ${k==='home'?'home ':''}${k==='logos'?'lg ':''}${r===k||(k==='calculator'&&r==='calculator-previous')?'on':''}" href="#${k}"${k==='home'&&r==='home'?' aria-current="page"':''}>${k==='home'?'<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>':''}${l}</a>`).join('');
+const pages={home,news,logos:logosPage,calculator:()=>calc(false),'calculator-previous':()=>calc(true),market,sizing};
+page.innerHTML=`<div style="display:flex;flex-direction:column;gap:24px">${(pages[r]||home)()}</div>`;
+if(r==='market')mktTick();if(r==='sizing')qInit();if(r==='calculator')calcInit(false);if(r==='calculator-previous')calcInit(true);
+document.title='Lodestar';
+updateBrand();
+applyName(page);
+}
+document.getElementById('brand').addEventListener('click',()=>{const l=document.getElementById('logo');if(RM||l.classList.contains('go'))return;l.classList.add('go');setTimeout(()=>l.classList.remove('go'),3500)});
+document.addEventListener('click',e=>{
+const t=e.target.closest('[data-act]');if(!t)return;
+const a=t.dataset.act,v=t.dataset.v;
+if(a==='filter'){S.filter=v;render()}
+if(a==='logopick'&&LOGOS[v]){S.prefs.logo=v;savePrefs();render()}
+if(a==='logoplay'&&LOGOS[v]&&!RM){const l=document.getElementById('lp-'+v);if(l&&!l.classList.contains('go')){l.classList.add('go');setTimeout(()=>l.classList.remove('go'),3600)}}
+if(a==='logocmp'){closeSettings();location.hash='#logos'}
+if(a==='keyonly'){S.key=!S.key;render()}
+if(a==='nkind'){S.nk=v;render()}
+if(a==='settings')openSettings();
+if(a==='sclose')closeSettings();
+if(a==='h24'){S.prefs.h24=v==='1';savePrefs();refresh();openSettings(true)}
+if(a==='sdetect'){S.prefs.tz=detectTz();savePrefs();refresh();openSettings(true)}
+if(a==='sclear'){LS.del('tcg.prefs');LS.del('tcg.state');S.prefs=defaultPrefs();S.cur={dep:'1000',lev:'5',entry:'100',mm:'0.5'};S.sc={long:{},short:{}};S.side='long';S.q=Q0();refresh();closeSettings()}
+if(a==='wsave'){const n=document.getElementById('wname'),z=document.getElementById('wtz');S.prefs.name=cleanName(n&&n.value);if(z&&z.value)S.prefs.tz=z.value;S.prefs.welcomed=true;savePrefs();refresh()}
+if(a==='wskip'){S.prefs.welcomed=true;savePrefs();render()}
+if(a==='qside'){S.q.side=v;render()}
+if(a==='qreset'){S.q=Q0();render()}
+if(a==='qnull'){S.q={bal:'0',loss:'0',risk:'0',pct:'0',entry:'0',stop:'0',srcA:'loss',srcB:'pct',posO:'0',side:S.q.side,mm:'0',zero:true};render()}
+if(a==='quse'){S.q.posO=null;S.q.zero=false;render()}
+if(a==='brief'){S.brief=!S.brief;render()}
+if(a==='side'){S.side=v;render()}
+if(a==='reset'){S.cur={dep:'1000',lev:'5',entry:'100',mm:'0.5'};S.sc={long:{},short:{}};render()}
+if(a==='cnull'){S.cur={dep:'',lev:'',entry:'',mm:''};const e={};[1,2,3,4].forEach(i=>e[i]={src:'x',val:''});S.sc={long:{...e},short:{...e}};render()}
+});
+window.addEventListener('hashchange',()=>{window.scrollTo(0,0);render()});
+function tick(){
+if(route()==='home'){const a=document.querySelector('[data-tick="hl1"]'),b=document.querySelector('[data-tick="hl2"]');if(a&&b){const L=homeLines();const x=withName(L[0]),y=withName(L[1]);if(a.innerHTML!==x)a.innerHTML=x;if(b.innerHTML!==y)b.innerHTML=y}}
+{const dk=dayKey(S.prefs.tz,Date.now());if(S.qd&&S.qd!==dk&&(route()==='home'||route()==='sizing'))render();S.qd=dk}
+{const k=ktime(),X=(n,v)=>{const e=document.querySelector(`[data-tick="${n}"]`);if(e&&e.textContent!==v)e.textContent=v};X('ch',hh(k.h));X('cm',pad(k.m));X('cdate',kdate());X('cap',S.prefs.h24?'MIN':'MIN · '+(k.h<12?'AM':'PM'))}
+mktTick();
+if(applyTheme()&&route()==='home')render();
+}
+/* ---------- personal settings, remembered in this browser ---------- */
+const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const validTz=z=>{try{new Intl.DateTimeFormat('en-US',{timeZone:z});return typeof z==='string'&&z.length>0}catch(e){return false}};
+function detectTz(){try{const z=Intl.DateTimeFormat().resolvedOptions().timeZone;return validTz(z)?z:'Asia/Baghdad'}catch(e){return 'Asia/Baghdad'}}
+function defaultPrefs(){return{name:'',tz:detectTz(),h24:true,welcomed:false,logo:'initial'}}
+const cleanName=v=>String(v||'').replace(/[<>&"]/g,'').trim().slice(0,24);
+const savePrefs=()=>LS.set('tcg.prefs',S.prefs);
+const saveState=()=>LS.set('tcg.state',{cur:S.cur,sc:S.sc,side:S.side,q:S.q});
+const withName=t=>S.prefs.name?String(t).replace(/\b[Bb]oss\b/g,S.prefs.name):t;
+function updateBrand(){const t=(S.prefs.name||'Boss')+"'s Dashboard",e=document.getElementById('bn');document.getElementById('brand').setAttribute('aria-label',t+', home');if(e&&e.textContent!==t){e.textContent=t;e.title=t}setLogo()}
+function applyName(root){if(!S.prefs.name)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const a=[];while(w.nextNode())a.push(w.currentNode);a.forEach(n=>{if(/\b[Bb]oss\b/.test(n.nodeValue))n.nodeValue=withName(n.nodeValue)})}
+function refresh(){curTheme='';applyTheme();render();tick()}
+const TZLIST=[['Pacific/Honolulu','Honolulu','United States'],['America/Anchorage','Anchorage','United States'],['America/Los_Angeles','Los Angeles','United States'],['America/Vancouver','Vancouver','Canada'],['America/Denver','Denver','United States'],['America/Mexico_City','Mexico City','Mexico'],['America/Chicago','Chicago','United States'],['America/New_York','New York','United States'],['America/Toronto','Toronto','Canada'],['America/Bogota','Bogotá','Colombia'],['America/Santiago','Santiago','Chile'],['America/Sao_Paulo','São Paulo','Brazil'],['America/Argentina/Buenos_Aires','Buenos Aires','Argentina'],['Atlantic/Reykjavik','Reykjavik','Iceland'],['Europe/London','London','United Kingdom'],['Africa/Casablanca','Casablanca','Morocco'],['Africa/Lagos','Lagos','Nigeria'],['Europe/Paris','Paris','France'],['Europe/Berlin','Berlin','Germany'],['Europe/Madrid','Madrid','Spain'],['Europe/Rome','Rome','Italy'],['Europe/Amsterdam','Amsterdam','Netherlands'],['Europe/Zurich','Zurich','Switzerland'],['Europe/Stockholm','Stockholm','Sweden'],['Europe/Warsaw','Warsaw','Poland'],['Africa/Johannesburg','Johannesburg','South Africa'],['Africa/Cairo','Cairo','Egypt'],['Europe/Athens','Athens','Greece'],['Europe/Kyiv','Kyiv','Ukraine'],['Asia/Jerusalem','Jerusalem','Israel'],['Asia/Beirut','Beirut','Lebanon'],['Asia/Damascus','Damascus','Syria'],['Asia/Amman','Amman','Jordan'],['Europe/Istanbul','Istanbul','Türkiye'],['Europe/Moscow','Moscow','Russia'],['Asia/Riyadh','Riyadh','Saudi Arabia'],['Asia/Kuwait','Kuwait City','Kuwait'],['Asia/Qatar','Doha','Qatar'],['Asia/Baghdad','Kurdistan',''],['Africa/Nairobi','Nairobi','Kenya'],['Asia/Tehran','Tehran','Iran'],['Asia/Dubai','Dubai','United Arab Emirates'],['Asia/Muscat','Muscat','Oman'],['Asia/Baku','Baku','Azerbaijan'],['Asia/Tbilisi','Tbilisi','Georgia'],['Asia/Yerevan','Yerevan','Armenia'],['Asia/Kabul','Kabul','Afghanistan'],['Asia/Karachi','Karachi','Pakistan'],['Asia/Tashkent','Tashkent','Uzbekistan'],['Asia/Kolkata','New Delhi','India'],['Asia/Colombo','Colombo','Sri Lanka'],['Asia/Kathmandu','Kathmandu','Nepal'],['Asia/Dhaka','Dhaka','Bangladesh'],['Asia/Almaty','Almaty','Kazakhstan'],['Asia/Bangkok','Bangkok','Thailand'],['Asia/Jakarta','Jakarta','Indonesia'],['Asia/Shanghai','Beijing','China'],['Asia/Hong_Kong','Hong Kong','Hong Kong'],['Asia/Singapore','Singapore','Singapore'],['Asia/Kuala_Lumpur','Kuala Lumpur','Malaysia'],['Asia/Manila','Manila','Philippines'],['Asia/Taipei','Taipei','Taiwan'],['Australia/Perth','Perth','Australia'],['Asia/Seoul','Seoul','South Korea'],['Asia/Tokyo','Tokyo','Japan'],['Australia/Sydney','Sydney','Australia'],['Pacific/Auckland','Auckland','New Zealand']];
+function tzOptions(){const cur=S.prefs.tz,now=Date.now();
+const rows=TZLIST.map(([z,c,k])=>({z,t:k?`${c} · ${k}`:c}));
+if(!TZLIST.some(x=>x[0]===cur))rows.push({z:cur,t:`${tzCity(cur)} · your device`});
+rows.sort((a,b)=>tzOffMin(a.z,now)-tzOffMin(b.z,now)||a.t.localeCompare(b.t));
+return rows.map(r=>`<option value="${r.z}" ${r.z===cur?'selected':''}>${r.t} · ${fmtOff(r.z)}</option>`).join('')}
+function welcomeCard(){return `<div class="note" id="welcome"><span class="l">Welcome</span><div style="line-height:1.6;margin-bottom:16px">Pleased to meet you, boss. What should I call you? I have set your clock to <b>${tzCity()}</b>, so change it below if I guessed wrong. I shall remember both on this device.</div>
+<div class="fld"><label><span class="l">Your name</span><input class="in" id="wname" type="text" maxlength="24" autocomplete="given-name" placeholder="e.g. Ahmed"></label><label><span class="l">Your timezone</span><select class="in" id="wtz">${tzOptions()}</select></label></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><button class="chip go" data-act="wsave">Save</button><button class="chip" data-act="wskip">Not now</button></div></div>`}
+let lastFocus=null;
+function openSettings(keep){const ov=document.getElementById('ov');if(!keep)lastFocus=document.activeElement;
+ov.innerHTML=`<div class="ovb" data-act="sclose"></div><div class="ovp c" role="dialog" aria-modal="true" aria-labelledby="stt"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px"><h2 id="stt" style="font-size:30px;font-weight:600">Your settings</h2><button class="chip" style="min-height:36px;padding:0 14px" data-act="sclose" aria-label="Close settings">Close</button></div>
+<div class="fld" style="grid-template-columns:1fr"><label><span class="l">What should I call you?</span><input class="in" id="sname" type="text" maxlength="24" value="${S.prefs.name}" placeholder="boss" autocomplete="given-name"></label>
+<label><span class="l">Timezone</span><select class="in" id="stz">${tzOptions()}</select></label></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="chip" data-act="sdetect">Detect my timezone</button></div>
+<div class="l" style="margin:20px 0 10px">Clock</div>
+<div style="display:flex;gap:10px"><button class="chip ${S.prefs.h24?'sel':''}" aria-pressed="${S.prefs.h24}" data-act="h24" data-v="1">24-hour</button><button class="chip ${!S.prefs.h24?'sel':''}" aria-pressed="${!S.prefs.h24}" data-act="h24" data-v="0">12-hour</button></div>
+<div class="m" style="margin-top:18px;line-height:1.5">Saved in this browser only. It will not follow you to another device, and clearing your browser data removes it.</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><button class="chip go" data-act="sclose">Done</button><button class="chip" data-act="sclear">Clear my saved data</button></div></div>`;
+ov.classList.add('open');
+const sn=document.getElementById('sname'),sz=document.getElementById('stz');
+sn.addEventListener('input',e=>{S.prefs.name=cleanName(e.target.value);savePrefs();render()});
+sz.addEventListener('change',e=>{if(validTz(e.target.value)){S.prefs.tz=e.target.value;savePrefs();refresh()}});
+if(!keep)sn.focus()}
+function closeSettings(){const ov=document.getElementById('ov');ov.classList.remove('open');ov.innerHTML='';if(lastFocus&&lastFocus.focus)try{lastFocus.focus()}catch(e){}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('ov').classList.contains('open'))closeSettings()});
+document.addEventListener('input',()=>saveState());
+document.addEventListener('click',()=>setTimeout(saveState,0));
+(function loadSaved(){
+const p=LS.get('tcg.prefs');S.prefs=defaultPrefs();
+if(p&&typeof p==='object'){if(typeof p.name==='string')S.prefs.name=cleanName(p.name);if(validTz(p.tz))S.prefs.tz=p.tz;if(typeof p.h24==='boolean')S.prefs.h24=p.h24;S.prefs.welcomed=!!p.welcomed;if(typeof p.logo==='string'&&LOGOS[p.logo])S.prefs.logo=p.logo}
+{const q=new URLSearchParams(location.search).get('logo');if(q&&LOGOS[q])S.prefs.logo=q}
+const st=LS.get('tcg.state');
+if(st&&typeof st==='object'){if(st.cur&&typeof st.cur==='object')S.cur={...S.cur,...st.cur};if(st.sc&&st.sc.long&&st.sc.short)S.sc=st.sc;if(st.side==='long'||st.side==='short')S.side=st.side;if(st.q&&typeof st.q==='object')S.q={...Q0(),...st.q}}
+})();
+applyTheme();render();setInterval(()=>{tick();mnStart()},1000);mnStart();
+</script>
+</body>
+</html>
